@@ -17,7 +17,6 @@ void Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu) {
 
                     printf("BL 0x%.08X", lr);
                 } else {
-                    printf("Unconditional branch");
                     word offset = (instr & 0x3FF) << 1;
                     if(offset & 0x0800) offset |= 0xF000;
                     printf("B 0x%.08X", offset + cpu->pc().data.reg32 + 2);
@@ -25,7 +24,7 @@ void Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu) {
             } else {
                 if(instruction & 0x1000) {
                     if((instruction & 0x0F00) == 0x0F00) {
-                        printf("Software interrupt");
+                        printf("SWI #%.02X", instruction & 0xFF);
                     } else {
 						word offset = (instruction & 0xFF) << 1;
 						if(offset & 0x100) offset |= 0xFFFFFE00;
@@ -55,7 +54,8 @@ void Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu) {
                         else printf("ADD SP, %.03X", offset);
                     }
                 } else {
-                    printf("Load Address");
+                    printf("ADD %s, %s, #%X", reg_names[(instruction >> 8) & 0x7], instruction & 0x0800 ? "SP" : "PC", instruction & 0xFF);
+
                 }
             } else {
                 if(instruction & 0x1000) {
