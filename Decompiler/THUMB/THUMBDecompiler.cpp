@@ -18,6 +18,9 @@ void Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu) {
                     printf("BL 0x%.08X", lr);
                 } else {
                     printf("Unconditional branch");
+                    word offset = (instr & 0x3FF) << 1;
+                    if(offset & 0x0800) offset |= 0xF000;
+                    printf("B 0x%.08X", offset + cpu->pc().data.reg32 + 2);
                 }
             } else {
                 if(instruction & 0x1000) {
