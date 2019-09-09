@@ -17,7 +17,7 @@ void Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu) {
 
                     printf("BL 0x%.08X", lr);
                 } else {
-                    word offset = (instr & 0x3FF) << 1;
+                    word offset = (instruction & 0x3FF) << 1;
                     if(offset & 0x0800) offset |= 0xF000;
                     printf("B 0x%.08X", offset + cpu->pc().data.reg32 + 2);
                 }
@@ -147,9 +147,21 @@ void Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu) {
                 word res = cpu->r32(((cpu->pc().data.reg32 + 2) & 0xFFFFFFFC) + ((instruction & 0xFF) << 2));
                 printf("LDR %s, = %.08X", reg_names[(instruction >> 8) & 0x7], res);
             } else if(instruction & 0x2000) {
-                printf("Load/Store with immidiate offset");
+                //printf("Load/Store with immidiate offset");
+                if(instruction & 0x0800) printf("LDR%s ", instruction & 0x1000 ? "B" : "");
+                else printf("STR%s ", instruction & 0x1000 ? "B" : "");
+
+                word off = (instruction >> 6) & 0x1F;
+                if(instruction & 0x1000) off <<= 2;
+
+                printf("%s, [%s, #%X]", reg_names[(instruction & 0x7)], reg_names[(instruction >> 3) & 0x7], off);
             } else if(instruction & 0x0200) {
-                printf("Load/Store with sign extended halfword");
+                if((instruction & 0x0C00) == 0x0C00) printf("STRH ");
+                else if(instruction & 0x0800) printf("LDRH ");
+                else if(instruction & 0x0400) printf("LDSB ");
+                else printf("LDSH ");
+
+                printf("%s, [%s, %s]", reg_names[(instruction & 0x7)], reg_names[(instruction >> 3) & 0x7], reg_names[(instruction >> 6) & 0x7]);
             } else {
                 printf(instruction & 0x0800 ? "LDR" : "STR");
                 printf(" %s, [%s, %s]", reg_names[(instruction & 0x7)], reg_names[((instruction >> 3) & 0x7)], reg_names[((instruction >> 6) & 0x7)]);
