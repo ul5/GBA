@@ -40,6 +40,27 @@ const char** Decompiler::reg_names = new const char*[18] {
     "SPSR"
 };
 
+const char** Decompiler::reg_names_with_constant_length = new const char*[18] {
+    "  R0",
+    "  R1",
+    "  R2",
+    "  R3",
+    "  R4",
+    "  R5",
+    "  R6",
+    "  R7",
+    "  R8",
+    "  R9",
+    " R10",
+    " R11",
+    " R12",
+    "  SP",
+    "  LR",
+    "  PC",
+    "CPSR",
+    "SPSR"
+};
+
 void Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 	printf("[DECOMPILER][%.08X] > %.08X ==> ", cpu->pc().data.reg32 - 4, instruction);
 

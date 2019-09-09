@@ -8,14 +8,14 @@ Debugger::Interpreter::~Interpreter() {
     
 }
 
-void Debugger::Interpreter::executeNextInstruction() {
+void Debugger::Interpreter::executeNextInstruction(bool disass) {
     word ni = fetchNextInstruction();
     
     if(cpu->reg(CPSR).data.reg32 & FLAG_T) {
-        Decompiler::decompileTHUMB(ni & 0xFFFF, cpu);
+        if(disass) Decompiler::decompileTHUMB(ni & 0xFFFF, cpu);
         execute_thumb(ni & 0xFFFF, cpu);
     } else {
-        Decompiler::decompileARM(ni, cpu);
+        if(disass) Decompiler::decompileARM(ni, cpu);
         execute_arm(ni, cpu);
     }
 }

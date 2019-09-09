@@ -15,7 +15,7 @@ namespace Debugger {
 		
 		Base::Register &pc() { return cpu->pc(); }
         
-		void executeNextInstruction() override;
+		void executeNextInstruction(bool disass = true) override;
 	};
 	
 }

@@ -10,13 +10,13 @@ int main(int argc, const char **args) {
     for(int i = 0; i < 36 || interpreter->pc().data.reg32 != 0xAB4; i++) {
         interpreter->executeNextInstruction();
     }
-    
-    // Execute two more instructions (and see the difference it made in the registers)
-    
+        
     interpreter->executeNextInstruction();
     interpreter->printRegisters();
     interpreter->executeNextInstruction();
     interpreter->printRegisters();
+
+    start_command_line(interpreter);
     
     delete interpreter;
 	return 0;

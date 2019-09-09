@@ -5,8 +5,8 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
         if(instruction & 0x4000) {
             if(instruction & 0x2000) {
                 if(instruction & 0x1000) {
-                    word off = ((instruction & 0x7FF) << 1);
-                    if(instruction & 0x400) off |= 0xFF800000;
+                    word off = ((instruction & 0x7FF) << 12);
+                    if(instruction & 0x0400) off |= 0xFF800000;
                     cpu->reg(LR).data.reg32 = cpu->reg(PC).data.reg32 + 2 + off;
                     
                     hword p2 = cpu->r16(cpu->pc().data.reg32);
@@ -17,9 +17,9 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                     cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 & 0xFFFFFFFE;
                     cpu->pc().data.reg32 = addr;
                 } else {
-                    word off = ((instruction & 0x7FF) << 1);
-                    if(instruction & 0x400) off |= 0xFF800000;
-                    cpu->reg(LR).data.reg32 = cpu->reg(PC).data.reg32 + 2 + off;
+                    word offset = (instruction & 0x3FF) << 1;
+                    if(offset & 0x0800) offset |= 0xFFFFF000;
+                    cpu->pc().data.reg32 += 2 + offset;
                 }
             } else {
                 if(instruction & 0x1000) {

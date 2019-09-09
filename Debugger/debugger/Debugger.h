@@ -7,14 +7,15 @@ namespace Debugger {
 	
 	class Debugger {
 	protected:
-        Base::CPU *cpu = nullptr;
         
 	public:
         Debugger();
         ~Debugger();
+
+        Base::CPU *cpu = nullptr;
         
         word fetchNextInstruction();
-		virtual void executeNextInstruction() = 0;
+	virtual void executeNextInstruction(bool disass = true) = 0;
 		
         void printRegisters();
 	};
