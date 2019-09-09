@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "Debugger::Debugger::printRegisters():Debugger.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "Decompiler::reg_names[15]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Base::MMU::r8(unsigned int):MMU.h">
+         <PersistentStrings>
+            <PersistentString
+               value = "address &amp; 0xFFFFFF">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
