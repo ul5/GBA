@@ -79,6 +79,7 @@ void Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 			else {
                 if(instruction & 0x00100000) printf("LDM");
                 else printf("STM");
+                printf("%s", conditions[(instruction >> 28) & 0xF]);
                 
                 if((instruction & 0x01800000) == 0x00800000) printf("IA");
                 else if((instruction & 0x01800000) == 0x01800000) printf("IB");
@@ -122,14 +123,21 @@ void Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 		else {
 			if ((instruction & 0x020000F0) == 0x00000090) {
 				if (instruction & 0x01000000) {
-					printf("Single Data Swap");
+                    printf("SWP");
+                    printf("%s", conditions[(instruction >> 28) & 0xF]);
+                    if(instruction & 0x00400000) printf("B");
+                    printf(" %s, %s, [%s]", reg_names[(instruction >> 12) & 0xF], reg_names[(instruction >> 0) & 0xF], reg_names[(instruction >> 16) & 0xF]);
 				}
 				else if (instruction & 0x00800000) {
 					printf("Multiply (accumulate) long");
 				}
 				else {
-					printf("Multiply (accumulate)");
-				}
+                    if(instruction & 0x00200000) printf("MLA%s ", (instruction & 0x00100000) ? "S" : "");
+                    else printf("MUL%s ", (instruction & 0x00100000) ? "S" : "");
+
+                    if(instruction & 0x00200000) printf("%s, %s, %s", reg_names[(instruction >> 16) & 0xF], reg_names[(instruction & 0xF)],reg_names[(instruction >> 8) & 0xF]);
+                    else printf("%s, %s, %s, %s", reg_names[(instruction >> 16) & 0xF], reg_names[(instruction & 0xF)],reg_names[(instruction >> 8) & 0xF], reg_names[(instruction >> 12) & 0xF]);
+ 				}
 			}
 			else if ((instruction & 0x020000F0) == 0x000000B0) {
 				if (instruction & 0x00400000) {
@@ -145,8 +153,10 @@ void Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 			}
 			else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
 				printf("BX %s", reg_names[instruction & 0xF]);
+                printf("%s", conditions[(instruction >> 28) & 0xF]);
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x003F0000 && (instruction & 0x00000FFF) == 0x00000FFF) {
                 printf("MRS");
+                printf("%s", conditions[(instruction >> 28) & 0xF]);
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003FFFF0) == 0x0029F000) {
                 if(instruction & (1 << 22)) printf("MSR SPSR, %s", reg_names[instruction & 0xF]);
                 else printf("MSR CPSR, %s", reg_names[instruction & 0xF]);
