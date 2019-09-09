@@ -1,0 +1,4 @@
+*.o
+bin/*
+GBA/bios.gba
+GBA/emerald.gba
