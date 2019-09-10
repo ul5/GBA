@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		133849F0231287CB009563D3 /* emerald.gba in CopyFiles */ = {isa = PBXBuildFile; fileRef = 133849EF231287C4009563D3 /* emerald.gba */; };
+		1374B6522326E634006193B8 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1374B6512326E634006193B8 /* libSDL2.a */; };
+		1374B6542326E8BF006193B8 /* Raleway-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1374B6532326E8B8006193B8 /* Raleway-Regular.ttf */; };
+		1374B6562326EA01006193B8 /* libSDL2_ttf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1374B6552326EA01006193B8 /* libSDL2_ttf.a */; };
 		9306833F2307BAAC00B711BB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9306833E2307BAAC00B711BB /* main.cpp */; };
 		930683472307BAB700B711BB /* libBase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 930683462307BAB700B711BB /* libBase.a */; };
 		930683492307BAB700B711BB /* libDebugger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 930683482307BAB700B711BB /* libDebugger.a */; };
@@ -22,6 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				1374B6542326E8BF006193B8 /* Raleway-Regular.ttf in CopyFiles */,
 				9306837C2307D83600B711BB /* bios.gba in CopyFiles */,
 				133849F0231287CB009563D3 /* emerald.gba in CopyFiles */,
 			);
@@ -31,6 +35,9 @@
 
 /* Begin PBXFileReference section */
 		133849EF231287C4009563D3 /* emerald.gba */ = {isa = PBXFileReference; lastKnownFileType = file; path = emerald.gba; sourceTree = "<group>"; };
+		1374B6512326E634006193B8 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../../../../../usr/local/Cellar/sdl2/2.0.10/lib/libSDL2.a; sourceTree = "<group>"; };
+		1374B6532326E8B8006193B8 /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Regular.ttf"; sourceTree = "<group>"; };
+		1374B6552326EA01006193B8 /* libSDL2_ttf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2_ttf.a; path = ../../../../../usr/local/Cellar/sdl2_ttf/2.0.15/lib/libSDL2_ttf.a; sourceTree = "<group>"; };
 		9306833B2307BAAC00B711BB /* GBA */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GBA; sourceTree = BUILT_PRODUCTS_DIR; };
 		9306833E2307BAAC00B711BB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		930683462307BAB700B711BB /* libBase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBase.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +51,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1374B6562326EA01006193B8 /* libSDL2_ttf.a in Frameworks */,
+				1374B6522326E634006193B8 /* libSDL2.a in Frameworks */,
 				930683472307BAB700B711BB /* libBase.a in Frameworks */,
 				930683492307BAB700B711BB /* libDebugger.a in Frameworks */,
 				9306834B2307BAB700B711BB /* libDecompiler.a in Frameworks */,
@@ -56,6 +65,7 @@
 		930683322307BAAC00B711BB = {
 			isa = PBXGroup;
 			children = (
+				1374B6532326E8B8006193B8 /* Raleway-Regular.ttf */,
 				9306837B2307D82B00B711BB /* bios.gba */,
 				133849EF231287C4009563D3 /* emerald.gba */,
 				9306833D2307BAAC00B711BB /* GBA */,
@@ -83,6 +93,8 @@
 		930683452307BAB700B711BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1374B6552326EA01006193B8 /* libSDL2_ttf.a */,
+				1374B6512326E634006193B8 /* libSDL2.a */,
 				930683462307BAB700B711BB /* libBase.a */,
 				930683482307BAB700B711BB /* libDebugger.a */,
 				9306834A2307BAB700B711BB /* libDecompiler.a */,
@@ -269,11 +281,26 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					/usr/local/Cellar/sdl2/2.0.10/lib,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/lib,
+				);
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
 					$PROJECT_DIR/../Debugger,
 					$PROJECT_DIR/../Base,
 					$PROJECT_DIR/../Decompiler,
+					/usr/local/Cellar/sdl2/2.0.10/include,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					/usr/local/Cellar/sdl2/2.0.10/lib,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -284,11 +311,26 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					/usr/local/Cellar/sdl2/2.0.10/lib,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/lib,
+				);
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
 					$PROJECT_DIR/../Debugger,
 					$PROJECT_DIR/../Base,
 					$PROJECT_DIR/../Decompiler,
+					/usr/local/Cellar/sdl2/2.0.10/include,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					/usr/local/Cellar/sdl2/2.0.10/lib,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

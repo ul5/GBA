@@ -1,6 +1,6 @@
 CXX=g++
-INCLUDE=-I "../Base/" -I "../Decompiler/"
-OBJS=debugger/Debugger.o debugger/CLI.o interpreter/Interpreter.o interpreter/ARM/ARMBranch.o interpreter/ARM/ARMDataProcessing.o interpreter/ARM/ARMInstructions.o interpreter/ARM/ARMLoadStore.o interpreter/THUMB/THUMBALU.o interpreter/THUMB/THUMBDataProcessing.o interpreter/THUMB/THUMBInstructions.o
+INCLUDE=-I "../Base/" -I "../Decompiler/" -I "../../../../Documents/libraries/include"
+OBJS=debugger/Debugger.o debugger/CLI.o debugger/GUI.o interpreter/Interpreter.o interpreter/ARM/ARMBranch.o interpreter/ARM/ARMDataProcessing.o interpreter/ARM/ARMInstructions.o interpreter/ARM/ARMLoadStore.o interpreter/THUMB/THUMBALU.o interpreter/THUMB/THUMBDataProcessing.o interpreter/THUMB/THUMBInstructions.o
 
 all: ../bin/libDebugger.so
 

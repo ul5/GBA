@@ -13,6 +13,10 @@
 		132FD957230C626B000FB796 /* ARMBranch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 132FD956230C626B000FB796 /* ARMBranch.cpp */; };
 		132FD959230C75D6000FB796 /* ARMDataProcessing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 132FD958230C75D6000FB796 /* ARMDataProcessing.cpp */; };
 		132FD95B230DDBCC000FB796 /* ARMLoadStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 132FD95A230DDBCB000FB796 /* ARMLoadStore.cpp */; };
+		13364F632326D56E009D19A3 /* CLI.h in Headers */ = {isa = PBXBuildFile; fileRef = 13364F612326D56E009D19A3 /* CLI.h */; };
+		13364F642326D56E009D19A3 /* CLI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13364F622326D56E009D19A3 /* CLI.cpp */; };
+		13364F672326DF2B009D19A3 /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13364F652326DF2B009D19A3 /* GUI.cpp */; };
+		13364F682326DF2B009D19A3 /* GUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 13364F662326DF2B009D19A3 /* GUI.h */; };
 		13466AA22315B53E0056B284 /* THUMBInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13466AA02315B53E0056B284 /* THUMBInstructions.cpp */; };
 		13466AA32315B53E0056B284 /* THUMBInstructions.h in Headers */ = {isa = PBXBuildFile; fileRef = 13466AA12315B53E0056B284 /* THUMBInstructions.h */; };
 		13466AA523170FE50056B284 /* THUMBDataProcessing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13466AA423170FE50056B284 /* THUMBDataProcessing.cpp */; };
@@ -29,6 +33,10 @@
 		132FD956230C626B000FB796 /* ARMBranch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARMBranch.cpp; sourceTree = "<group>"; };
 		132FD958230C75D6000FB796 /* ARMDataProcessing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARMDataProcessing.cpp; sourceTree = "<group>"; };
 		132FD95A230DDBCB000FB796 /* ARMLoadStore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARMLoadStore.cpp; sourceTree = "<group>"; };
+		13364F612326D56E009D19A3 /* CLI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLI.h; sourceTree = "<group>"; };
+		13364F622326D56E009D19A3 /* CLI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLI.cpp; sourceTree = "<group>"; };
+		13364F652326DF2B009D19A3 /* GUI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GUI.cpp; sourceTree = "<group>"; };
+		13364F662326DF2B009D19A3 /* GUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GUI.h; sourceTree = "<group>"; };
 		13466AA02315B53E0056B284 /* THUMBInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = THUMBInstructions.cpp; sourceTree = "<group>"; };
 		13466AA12315B53E0056B284 /* THUMBInstructions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = THUMBInstructions.h; sourceTree = "<group>"; };
 		13466AA423170FE50056B284 /* THUMBDataProcessing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = THUMBDataProcessing.cpp; sourceTree = "<group>"; };
@@ -74,6 +82,13 @@
 			path = THUMB;
 			sourceTree = "<group>";
 		};
+		13EE4AA32326E2D200001B7E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		930683222307BA9A00B711BB = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +96,7 @@
 				930683572307BC2A00B711BB /* interpreter */,
 				930683552307BC0F00B711BB /* GBADebugger.h */,
 				9306832C2307BA9A00B711BB /* Products */,
+				13EE4AA32326E2D200001B7E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,8 +122,12 @@
 		930683612307BD2900B711BB /* debugger */ = {
 			isa = PBXGroup;
 			children = (
+				13364F622326D56E009D19A3 /* CLI.cpp */,
+				13364F612326D56E009D19A3 /* CLI.h */,
 				930683622307BD3800B711BB /* Debugger.cpp */,
 				930683632307BD3800B711BB /* Debugger.h */,
+				13364F652326DF2B009D19A3 /* GUI.cpp */,
+				13364F662326DF2B009D19A3 /* GUI.h */,
 			);
 			path = debugger;
 			sourceTree = "<group>";
@@ -119,10 +139,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13364F682326DF2B009D19A3 /* GUI.h in Headers */,
 				13466AA32315B53E0056B284 /* THUMBInstructions.h in Headers */,
 				930683602307BD0400B711BB /* Interpreter.h in Headers */,
 				930683652307BD3800B711BB /* Debugger.h in Headers */,
 				132FD955230C623B000FB796 /* ARMInstructions.h in Headers */,
+				13364F632326D56E009D19A3 /* CLI.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +206,8 @@
 			files = (
 				13466AA22315B53E0056B284 /* THUMBInstructions.cpp in Sources */,
 				13161C83231EDB9F00797D47 /* THUMBALU.cpp in Sources */,
+				13364F672326DF2B009D19A3 /* GUI.cpp in Sources */,
+				13364F642326D56E009D19A3 /* CLI.cpp in Sources */,
 				132FD95B230DDBCC000FB796 /* ARMLoadStore.cpp in Sources */,
 				132FD957230C626B000FB796 /* ARMBranch.cpp in Sources */,
 				930683642307BD3800B711BB /* Debugger.cpp in Sources */,
@@ -317,6 +341,9 @@
 				HEADER_SEARCH_PATHS = (
 					$PROJECT_DIR/../Base,
 					$PROJECT_DIR/../Decompiler,
+					/usr/local/Cellar/sdl2/2.0.10/include,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -332,6 +359,9 @@
 				HEADER_SEARCH_PATHS = (
 					$PROJECT_DIR/../Base,
 					$PROJECT_DIR/../Decompiler,
+					/usr/local/Cellar/sdl2/2.0.10/include,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

@@ -1,13 +1,24 @@
 #include "CLI.h"
 
+#ifndef __APPLE__
+#  define COLOR_RESET "\033[0m"
+#  define COLOR_BOLD "\033[1m"
+#  define COLOR_RED "\033[0;31m"
+#else
+#  define COLOR_RESET ""
+#  define COLOR_BOLD ""
+#  define COLOR_RED ""
+#endif
+
 void printPrompt(Debugger::Debugger *debugger) {
     for(int i = -2; i <= 2; i++) {
-        if(i == 0) printf("\033[1m > "); 
+        if(i == 0) printf("%s > ", COLOR_BOLD);
         else printf("   ");
+        for(int a = 0; a < 2 - abs(i); a++) printf(" ");
         Decompiler::decompileInstruction(debugger->cpu, i * ((debugger->cpu->reg(CPSR).data.reg32 & FLAG_T) ? 2 : 4));
-        printf("\033[0m");
+        printf(COLOR_RESET);
     } 
-    std::cout << "\033[1m[DEBUGGER] > \033[0m";
+    std::cout << COLOR_BOLD << "[DEBUGGER] > " << COLOR_RESET;
 }
 
 void Debugger::start_command_line(Debugger *debugger) {
@@ -26,7 +37,7 @@ void Debugger::start_command_line(Debugger *debugger) {
         
         if(!memcmp(str, "q", 1)) break;
         else if(!memcmp(str, "h", 1)) {
-            printf("\033[1m");
+            printf(COLOR_BOLD);
             std::cout << "[DEBUGGER][HELP] Debugger help: <arg=x> are optional and default to x" << std::endl;
             std::cout << "[DEBUGGER][HELP] d <i=1>\t\t\tDisassemble the next i instructions" << std::endl;
             std::cout << "[DEBUGGER][HELP] diff <i=1>\t\t\tExecute next i instructions & Create diff of registers & (TODO) memory" << std::endl;
@@ -37,7 +48,7 @@ void Debugger::start_command_line(Debugger *debugger) {
             std::cout << "[DEBUGGER][HELP] rb addr\t\t\t\tRead a byte at an address (hex)" << std::endl;
             std::cout << "[DEBUGGER][HELP] reg\t\t\t\tPrint the registers" << std::endl;
             std::cout << "[DEBUGGER][HELP] u addr\t\t\t\tRun until the address (hex) is reached" << std::endl;
-            printf("\033[0m");
+            printf(COLOR_RESET);
         }
         else if(!memcmp(str, "diff", 1)) {
             word *old_regs = new word[17];
@@ -49,10 +60,10 @@ void Debugger::start_command_line(Debugger *debugger) {
 
             printf("[DEBUGGER] ");
             for(int i = 0; i < 18; i++) {
-                if(old_regs[i] != debugger->cpu->reg(i).data.reg32) printf("\033[0;31m");
-                else printf("\033[0m");
+                if(old_regs[i] != debugger->cpu->reg(i).data.reg32) printf(COLOR_RED);
+                else printf(COLOR_RESET);
                 printf("%s (Old = %.08X, New = %.08X)\t", Decompiler::reg_names_with_constant_length[i], old_regs[i], debugger->cpu->reg(i).data.reg32);
-                if(i % 3 == 2) printf("\033[0m\n[DEBUGGER] ");
+                if(i % 3 == 2) printf("%s\n[DEBUGGER] ", COLOR_RESET);
             }
             printf("Memory: ...\n");
 
