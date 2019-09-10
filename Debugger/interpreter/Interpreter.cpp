@@ -15,7 +15,7 @@ void Debugger::Interpreter::executeNextInstruction(bool disass) {
         if(disass) Decompiler::decompileTHUMB(ni & 0xFFFF, cpu);
         execute_thumb(ni & 0xFFFF, cpu);
     } else {
-        if(disass) Decompiler::decompileARM(ni, cpu);
+        if(disass) std::string out = Decompiler::decompileARM(ni, cpu);
         execute_arm(ni, cpu);
     }
 }
