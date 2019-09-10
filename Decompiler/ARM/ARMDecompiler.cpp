@@ -62,7 +62,7 @@ const char** Decompiler::reg_names_with_constant_length = new const char*[18] {
 };
 
 const char *chars = new char[16] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-std::string Decompiler::int_to_hex(int num, int str_len) {
+std::string Decompiler::int_to_hex(word num, int str_len) {
     std::string r;
     while(num > 0) {
         r = chars[num % 16] + r;
@@ -110,16 +110,17 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
 			else {
                 if(instruction & 0x00100000) disassembled = "LDM";
                 else disassembled = "STM";
-                disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
                 
                 if((instruction & 0x01800000) == 0x00800000) disassembled = disassembled + "IA";
                 else if((instruction & 0x01800000) == 0x01800000) disassembled = disassembled + "IB";
                 else if((instruction & 0x01800000) == 0x00000000) disassembled = disassembled + "DA";
                 else if((instruction & 0x01800000) == 0x01000000) disassembled = disassembled + "DB";
+
+                disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
                 
                 disassembled = disassembled + " " + reg_names[(instruction >> 16) & 0xF] + ", {";
 
-                for(int i = 0; i < 15; i++) if(instruction & (1 << i)) disassembled = disassembled + reg_names[i] + ((instruction & ((1 << i) - 1)) ? ", " : "");
+                for(int i = 0; i < 15; i++) if(instruction & (1 << i)) disassembled = disassembled + reg_names[i] + (((instruction & 0xFFFF) >> (i+1) ) ? ", " : "");
                 disassembled = disassembled + "}";
 			}
 		}
@@ -164,7 +165,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
 					//printf("Multiply (accumulate) long");
 				}
 				else {
-                    if(instruction & 0x00200000) (instruction & 0x00100000) ? "MLAS" : "MLA";
+                    if(instruction & 0x00200000) disassembled = (instruction & 0x00100000) ? "MLAS" : "MLA";
                     else disassembled = (instruction & 0x00100000) ? "MULS" : "MUL";
 
                     if(instruction & 0x00200000) disassembled = disassembled + reg_names[(instruction >> 16) & 0xF] + ", " + reg_names[(instruction & 0xF)] + ", " + reg_names[(instruction >> 8) & 0xF];

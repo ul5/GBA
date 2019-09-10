@@ -12,11 +12,15 @@ namespace Debugger {
         SDL_Renderer *renderer = nullptr;
 	    TTF_Font *font = nullptr;
         
-	    void renderText(const char *text, int x, int y, int w = -1, int h = -1);
-        void printPrompt(Debugger *debugger);
+        Debugger *mDebugger = nullptr;
+        
+	    void renderText(const char *text, int x, int y, int col = 0xFFFFFFFF);
+        void renderDecompiler();
+        void renderFlags();
 
     public:
         GUI(Debugger *debugger);
+        void start();
     };
     
 }

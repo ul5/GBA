@@ -28,7 +28,32 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
         else {
             if (instruction & 0x02000000) arm_branch(instruction, cpu);
             else {
-                printf("Block Data Transfer");
+                word a = (instruction & 0x01800000);
+                word start_address = cpu->reg((instruction >> 16) & 0xF).data.reg32;
+                byte amount_regs = 0;
+                for(int i = 0; i < 16; i++) if(instruction & (1 << i)) ++amount_regs;
+                
+                if(a == 0x01800000) start_address += 4;
+                else if(a == 0x00800000) start_address += 0;
+                else if(a == 0x01000000) start_address -= amount_regs * 4;
+                else if(a == 0x00000000) start_address += amount_regs * 4 - 4;
+
+                if(instruction & 0x00200000) {
+                    if(instruction & 0x00800000) cpu->reg((instruction >> 16) & 0xF).data.reg32 += 4 * amount_regs;
+                    else cpu->reg((instruction >> 16) & 0xF).data.reg32 -= 4 * amount_regs;
+                }
+                
+                if(instruction & 0x00100000) {
+                    for(int i = 0; i < 16; i++) if(instruction & (1 << i)) {
+                        cpu->reg(i).data.reg32 = cpu->r32(start_address);
+                        start_address += 4;
+                    }
+                } else {
+                    for(int i = 0; i < 16; i++) if(instruction & (1 << i)) {
+                        cpu->w32(start_address, cpu->reg(i).data.reg32);
+                        start_address += 4;
+                    }
+                }
             }
         }
     }

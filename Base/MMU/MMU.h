@@ -40,7 +40,7 @@ namespace Base {
         inline void w16(word address, hword val) { *(hword*)(memory[(address >> 24) & 0xF] + (address & bit_masks[(address >> 24) & 0xF])) = val; }
         inline void w32(word address, word val) {
 			*(word*)(memory[(address >> 24) & 0xF] + (address & bit_masks[(address >> 24) & 0xF])) = val;
-			printf("[MMU][DEBUG] Written value of %.08X to address %.02X%.06X\n", val, (address >> 24) & 0xF, address & bit_masks[(address >> 24) & 0xF]);
+			//printf("[MMU][DEBUG] Written value of %.08X to address %.02X%.06X\n", val, (address >> 24) & 0xF, address & bit_masks[(address >> 24) & 0xF]);
 		}
     };
 	
