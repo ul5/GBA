@@ -10,9 +10,10 @@ namespace Debugger {
     private:
         SDL_Window *debugger_window = nullptr;
         SDL_Renderer *renderer = nullptr;
-	TTF_Font *font = nullptr;
+	    TTF_Font *font = nullptr;
         
-	void renderText(const char *text, int x, int y, int w = -1, int h = -1);
+	    void renderText(const char *text, int x, int y, int w = -1, int h = -1);
+        void printPrompt(Debugger *debugger);
 
     public:
         GUI(Debugger *debugger);

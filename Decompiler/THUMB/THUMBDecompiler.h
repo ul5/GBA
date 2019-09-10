@@ -3,5 +3,5 @@
 #include "../ARM/ARMDecompiler.h" // Some definitions for the register names
 
 namespace Decompiler {
-    void decompileTHUMB(hword instruction, Base::CPU *cpu);
+    std::string decompileTHUMB(hword instruction, Base::CPU *cpu, bool = true);
 }

@@ -5,22 +5,24 @@
 
 namespace Decompiler {
 
-    inline void decompileInstruction(Base::CPU *cpu, word offset) {
+    inline std::string decompileInstruction(Base::CPU *cpu, word offset, bool print = true) {
+        std::string ret;
         cpu->pc().data.reg32 += offset;
         if(cpu->reg(CPSR).data.reg32 & FLAG_T) {
             hword i = cpu->r16(cpu->pc().data.reg32);
             cpu->pc().data.reg32 += 2;
-            decompileTHUMB(i, cpu);
+            ret = decompileTHUMB(i, cpu, print);
             cpu->pc().data.reg32 -= 2;
         }
         else {
             word i = cpu->r32(cpu->pc().data.reg32);
             cpu->pc().data.reg32 += 4;
-            decompileARM(i, cpu);
+            ret = decompileARM(i, cpu, print);
             cpu->pc().data.reg32 -= 4;
         }
         
         cpu->pc().data.reg32 -= offset;
+        return ret;
     }
 
 }

@@ -72,8 +72,8 @@ std::string Decompiler::int_to_hex(int num, int str_len) {
     return r;
 }
 
-std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
-	printf("[DECOMPILER][%.08X] > %.08X ==> ", cpu->pc().data.reg32 - 4, instruction);
+std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool print) {
+	if(print) printf("[DECOMPILER][%.08X] > %.08X ==> ", cpu->pc().data.reg32 - 4, instruction);
 
     // Condition = conditions[(instruction >> 28) & 0xF]
     std::string disassembled = "";
@@ -86,14 +86,14 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 			else {
 				if (instruction & 0x02000000) {
 					if (instruction & 0x00000010) {
-						printf("CoProcessor Register transfer");
+						//printf("CoProcessor Register transfer");
 					}
 					else {
-						printf("CoProcessor Data operation");
+						//printf("CoProcessor Data operation");
 					}
 				}
 				else {
-					printf("CoProcessor Data transfer");
+					//printf("CoProcessor Data transfer");
 				}
 			}
 		}
@@ -105,7 +105,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
                 word addr = (instruction & 0x00FFFFFF) << 2;
                 if(addr & 0x02000000) addr |= 0xFC000000;
                 addr += cpu->pc().data.reg32 + 4;
-                disassembled = disassembled + int_to_hex(addr);
+                disassembled = disassembled + " " + int_to_hex(addr);
 			}
 			else {
                 if(instruction & 0x00100000) disassembled = "LDM";
@@ -117,7 +117,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
                 else if((instruction & 0x01800000) == 0x00000000) disassembled = disassembled + "DA";
                 else if((instruction & 0x01800000) == 0x01000000) disassembled = disassembled + "DB";
                 
-                disassembled = disassembled + reg_names[(instruction >> 16) & 0xF] + ", {";
+                disassembled = disassembled + " " + reg_names[(instruction >> 16) & 0xF] + ", {";
 
                 for(int i = 0; i < 15; i++) if(instruction & (1 << i)) disassembled = disassembled + reg_names[i] + ((instruction & ((1 << i) - 1)) ? ", " : "");
                 disassembled = disassembled + "}";
@@ -161,7 +161,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
                     disassembled = disassembled + " " + reg_names[(instruction >> 12) & 0xF] + ", " + reg_names[(instruction >> 0) & 0xF] + ", [" + reg_names[(instruction >> 16) & 0xF] + "]";
 				}
 				else if (instruction & 0x00800000) {
-					printf("Multiply (accumulate) long");
+					//printf("Multiply (accumulate) long");
 				}
 				else {
                     if(instruction & 0x00200000) (instruction & 0x00100000) ? "MLAS" : "MLA";
@@ -173,21 +173,21 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 			}
 			else if ((instruction & 0x020000F0) == 0x000000B0) {
 				if (instruction & 0x00400000) {
-					printf("hword data tranfer, immidiate offset");
+					//printf("hword data tranfer, immidiate offset");
 				}
 				else {
-					printf("hword data tranfer, register offset");
+					//printf("hword data tranfer, register offset");
 				}
 			}
 			else if ((instruction & 0x020000D0) == 0x000000D0) {
                 disassembled = (instruction & 0x00100000) ? "LDRS" : "STRS";
                 disassembled = disassembled + ((instruction & 0x00000020) ? "H" : "B");
-                printf("(NYI)");
+                //printf("(NYI)");
 			}
 			else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
 				disassembled = std::string("BX ") + reg_names[instruction & 0xF];
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x003F0000 && (instruction & 0x00000FFF) == 0x00000FFF) {
-                printf("MRS");
+                //printf("MRS");
                     disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003FFFF0) == 0x0029F000) {
                 if(instruction & (1 << 22)) disassembled = std::string("MSR SPSR, ") + reg_names[instruction & 0xF];
@@ -266,7 +266,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
                     } else { // Shift by immidiate
                         word amt = (instruction >> 7) & 0x1F;
                         if(amt) {
-                            disassembled = disassembled + shift + " #" + int_to_hex(amt, 8);
+                            disassembled = disassembled + shift + " #" + int_to_hex(amt, 8) + "]";
                         } else disassembled = disassembled + "]";
                     }
                 }
@@ -274,6 +274,6 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu) {
 		}
     }
     
-    printf("%s\n", disassembled.c_str());
+    if(print) printf("%s\n", disassembled.c_str());
     return disassembled;
 }

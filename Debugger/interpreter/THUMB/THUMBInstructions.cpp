@@ -24,7 +24,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
             } else {
                 if(instruction & 0x1000) {
                     if((instruction & 0x0F00) == 0x0F00) {
-                        printf("Software interrupt");
+                        //printf("Software interrupt");
                     } else {
 						if(Base::isConditionMet((instruction >> 8) & 0xF, cpu->reg(CPSR).data.reg32)) {
 							word offset = (instruction & 0xFF) << 1;
@@ -33,7 +33,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 						}
                     }
                 } else {
-                    printf("Multiple load store (PUSH/POP)");
+                    //printf("Multiple load store (PUSH/POP)");
                 }
             }
         } else {
@@ -69,7 +69,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                         else cpu->reg(SP).data.reg32 += offset;
                     }
                 } else {
-                    printf("Load Address");
+                    //printf("Load Address");
                 }
             } else {
                 if(instruction & 0x1000) {
@@ -86,17 +86,21 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
         }
     } else {
         if(instruction & 0x4000) {
-            if((instruction & 0x1C00) == 0x0000) {
+            if((instruction & 0x1C00) == 0x0000) { // 467B = 010001100 1111 011
                 thumb_alu(instruction, cpu);
             } else if((instruction & 0x1C00) == 0x0400) {
+                word a1 = cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32;
+                word a2 = cpu->reg((instruction >> 3) & 0xF).data.reg32;
+
+                if(((instruction & 0x7) | ((instruction >> 4) & 0x8)) == 0xF) a1 += 2;
+                if(((instruction >> 3) & 0xF) == 0xF) a2 += 2;
+
 				switch((instruction >> 8) & 3) {
 					case 0:
-                        cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32 += cpu->reg((instruction >> 3) & 0xF).data.reg32;
+                        cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32 += a2;
 						break;
 					case 1:
                     {
-                        word a1 = cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32;
-                        word a2 = cpu->reg((instruction >> 3) & 0xF).data.reg32;
                         word out = a1 - a2;
                         
                         if(out == 0) cpu->reg(CPSR).data.reg32 |= FLAG_Z;
@@ -114,11 +118,11 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                     }
 						break;
 					case 2:
-                        cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32 = cpu->reg((instruction >> 3) & 0xF).data.reg32;
+                        cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32 = a2;
 						break;
 					case 3: // BX
 					{
-						word addr = cpu->reg((instruction >> 3) & 0xF).data.reg32;
+						word addr = a2;
 						cpu->pc().data.reg32 = addr & 0xFFFFFFFE;
 						if(!(addr & 1)) cpu->reg(CPSR) &= ~FLAG_T;
 					}
@@ -127,9 +131,9 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
             } else if((instruction & 0x1800) == 0x0800) {
                 cpu->reg((instruction >> 8) & 0x7) = cpu->r32(((cpu->pc().data.reg32 + 2) & 0xFFFFFFFC) + ((instruction & 0xFF) << 2));
             } else if(instruction & 0x2000) {
-                printf("Load/Store with immidiate offset");
+                //printf("Load/Store with immidiate offset");
             } else if(instruction & 0x0200) {
-                printf("Load/Store with sign extended halfword");
+                //printf("Load/Store with sign extended halfword");
             } else {
                 word addr = (cpu->reg((instruction >> 3) & 0x7).data.reg32 + cpu->reg((instruction >> 6) & 0x7).data.reg32);
                 if(instruction & 0x0800) {

@@ -8,6 +8,6 @@ namespace Decompiler {
     extern const char** conditions;
 
     std::string int_to_hex(int num, int str_len = 8);
-	std::string decompileARM(word instruction, Base::CPU *cpu);
+	std::string decompileARM(word instruction, Base::CPU *cpu, bool print = true);
 	
 }
