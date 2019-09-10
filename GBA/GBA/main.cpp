@@ -14,7 +14,7 @@ int main(int argc, const char **args) {
     interpreter->printRegisters();
     interpreter->executeNextInstruction();
     interpreter->printRegisters();
-    Debugger::GUI a;
+    Debugger::GUI a(interpreter);
 
     //start_command_line(interpreter);
     
