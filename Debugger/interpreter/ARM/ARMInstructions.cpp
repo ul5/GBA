@@ -9,19 +9,19 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
     if (instruction & 0x08000000) {
         if (instruction & 0x04000000) {
             if ((instruction & 0x0F000000) == 0x0F000000) {
-                printf("SWI");
+                printf("SWI\n");
             }
             else {
                 if (instruction & 0x02000000) {
                     if (instruction & 0x00000010) {
-                        printf("CoProcessor Register transfer");
+                        printf("CoProcessor Register transfer\n");
                     }
                     else {
-                        printf("CoProcessor Data operation");
+                        printf("CoProcessor Data operation\n");
                     }
                 }
                 else {
-                    printf("CoProcessor Data transfer");
+                    printf("CoProcessor Data transfer\n");
                 }
             }
         }
@@ -60,7 +60,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
     else {
         if (instruction & 0x04000000) {
             if ((instruction & 0x02000010) == 0x02000010) {
-                printf("Undefined");
+                printf("Undefined\n");
             }
             else {
                 if(instruction & (1 << 20)) arm_load(instruction, cpu);
@@ -70,25 +70,25 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
         else {
             if ((instruction & 0x020000F0) == 0x00000090) {
                 if (instruction & 0x01000000) {
-                    printf("Single Data Swap");
+                    printf("Single Data Swap\n");
                 }
                 else if (instruction & 0x00800000) {
-                    printf("Multiply (accumulate) long");
+                    printf("Multiply (accumulate) long\n");
                 }
                 else {
-                    printf("Multiply (accumulate)");
+                    printf("Multiply (accumulate)\n");
                 }
             }
             else if ((instruction & 0x020000F0) == 0x000000B0) {
                 if (instruction & 0x00400000) {
-                    printf("hword data tranfer, immidiate offset");
+                    printf("hword data tranfer, immidiate offset\n");
                 }
                 else {
-                    printf("hword data tranfer, register offset");
+                    printf("hword data tranfer, register offset\n");
                 }
             }
             else if ((instruction & 0x020000D0) == 0x000000D0) {
-                printf("Signed data transfer (byte/hword)");
+                printf("Signed data transfer (byte/hword)\n");
             }
             else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
                 word target_addr = cpu->reg(instruction & 0xF).data.reg32;

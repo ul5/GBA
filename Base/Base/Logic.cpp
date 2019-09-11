@@ -63,7 +63,7 @@ word Base::shift(byte data, word reg, Base::RegisterSet set) {
     if(((data >> 4) & 0xF) == 0xF) printf("REGISTER IS PC!?!?!?\n");
 	bool carryOut = false;
 	
-	switch(data & 0x3) {
+	switch((data >> 1) & 0x3) {
 		case 0: // Logical left
 			carryOut = amt == 0 ? (set[CPSR].data.reg32 & FLAG_C) : result & (1 << (31 - amt)); // If amount is 0, don't change FLAG_C
 			result <<= amt;

@@ -36,7 +36,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
         case 0x3:
             printf("RSB");
             break;
-        case 0x4:
+        case 0x4: // ADD
         {
             word out = arg1 + arg2;
             
@@ -57,21 +57,21 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
         case 0x7:
             printf("RSC");
             break;
-        case 0x8:
+        case 0x8: // TST
         {
             word out = arg1 & arg2;
             set_n = (out & 0x80000000) ? SET : RESET;
             set_z = (out == 0) ? SET : RESET;
         }
             break;
-        case 0x9:
+        case 0x9: // EOR --> test
         {
             word out = arg1 ^ arg2;
             set_n = (out & 0x80000000) ? SET : RESET;
             set_z = (out == 0) ? SET : RESET;
         }
             break;
-        case 0xA:
+        case 0xA: // CMP
             {
                 if(!s) {
                     printf("S bit should be set\n");
@@ -90,7 +90,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
         case 0xC:
             printf("ORR");
             break;
-        case 0xD:
+        case 0xD: // MOV
             dest.data.reg32 = arg2;
             break;
         case 0xE:

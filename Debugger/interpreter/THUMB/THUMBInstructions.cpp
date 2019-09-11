@@ -14,7 +14,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                     cpu->reg(LR).data.reg32 += (p2 & 0x7FF) << 1;
 
                     word addr = cpu->reg(LR).data.reg32;
-                    cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 & 0xFFFFFFFE;
+                    cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 | 1;
                     cpu->pc().data.reg32 = addr;
                 } else {
                     word offset = (instruction & 0x3FF) << 1;

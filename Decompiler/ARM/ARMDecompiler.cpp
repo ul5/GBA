@@ -133,13 +133,13 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
 			else {
                 if(instruction & 0x00100000) disassembled = "LDR";
                 else disassembled = "STR";
-                disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
                 if(instruction & 0x00400000) disassembled = disassembled + "B";
                 if(instruction & 0x00200000) disassembled = disassembled + "W";
+                disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
                 
-                disassembled = disassembled + reg_names[(instruction >> 12) & 0xF] + ", ";
-                disassembled = disassembled + "[" + reg_names[(instruction >> 16) & 0xF];
-                if(!(instruction & 0x02000000)) disassembled = disassembled + int_to_hex(instruction & 0xFFF, 3) + "]";
+                disassembled = disassembled + " " + reg_names[(instruction >> 12) & 0xF] + ", ";
+                disassembled = disassembled + "[" + reg_names[(instruction >> 16) & 0xF] + " ";
+                if(!(instruction & 0x02000000)) disassembled = disassembled + "#" + int_to_hex(instruction & 0xFFF, 3) + "]";
                 else {
                     const char *shift = (instruction & 0x40) ? (instruction & 0x20 ? "ROR" : "ASR") : (instruction & 0x20 ? "LSR" : "LSL");
                     if(instruction & 0x10) { // Shift by reg
