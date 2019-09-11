@@ -79,6 +79,8 @@ Debugger::GUI::GUI(Debugger *debugger) : mDebugger(debugger) {
 
 void Debugger::GUI::start() {
     SDL_ShowWindow(debugger_window);
+
+    std::string text = "== ";
     
     SDL_Event e;
     bool running = true;
@@ -89,9 +91,37 @@ void Debugger::GUI::start() {
             } else if(e.type == SDL_KEYDOWN) {
                 if(e.key.keysym.sym == SDLK_SPACE) mDebugger->executeNextInstruction(false);
                 else if(e.key.keysym.sym == SDLK_ESCAPE) running = false;
+                else if(e.key.keysym.sym == SDLK_0) text += '0';
+                else if(e.key.keysym.sym == SDLK_1) text += '1';
+                else if(e.key.keysym.sym == SDLK_2) text += '2';
+                else if(e.key.keysym.sym == SDLK_3) text += '3';
+                else if(e.key.keysym.sym == SDLK_4) text += '4';
+                else if(e.key.keysym.sym == SDLK_5) text += '5';
+                else if(e.key.keysym.sym == SDLK_6) text += '6';
+                else if(e.key.keysym.sym == SDLK_7) text += '7';
+                else if(e.key.keysym.sym == SDLK_8) text += '8';
+                else if(e.key.keysym.sym == SDLK_9) text += '9';
+                else if(e.key.keysym.sym == SDLK_a) text += 'A';
+                else if(e.key.keysym.sym == SDLK_b) text += 'B';
+                else if(e.key.keysym.sym == SDLK_c) text += 'C';
+                else if(e.key.keysym.sym == SDLK_d) text += 'D';
+                else if(e.key.keysym.sym == SDLK_e) text += 'E';
+                else if(e.key.keysym.sym == SDLK_f) text += 'F';
+                else if(e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 3) text = text.substr(0, text.length() - 2);
+                else if(e.key.keysym.sym == SDLK_RETURN) {
+                    running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
+                    animated = true;
+                }
             }
         }
         
+        if(animated && mDebugger->cpu->pc().data.reg32 != running_until) {
+            mDebugger->executeNextInstruction(false);
+        } else if(animated) {
+            running_until = 0;
+            animated = false;
+        }
+
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
         SDL_RenderClear(renderer);
 
@@ -108,6 +138,7 @@ void Debugger::GUI::start() {
             SDL_RenderDrawRect(renderer, &rect);
         }
 
+        renderText(text.c_str(), 0, 600);
         renderDecompiler();
         renderFlags();
 

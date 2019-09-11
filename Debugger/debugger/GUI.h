@@ -13,6 +13,8 @@ namespace Debugger {
 	    TTF_Font *font = nullptr;
         
         Debugger *mDebugger = nullptr;
+        word running_until = 0;
+        bool animated = false;
         
 	    void renderText(const char *text, int x, int y, int col = 0xFFFFFFFF);
         void renderDecompiler();
