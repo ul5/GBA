@@ -17,7 +17,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                     cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 | 1;
                     cpu->pc().data.reg32 = addr;
                 } else {
-                    word offset = (instruction & 0x3FF) << 1;
+                    word offset = (instruction & 0x7FF) << 1;
                     if(offset & 0x0800) offset |= 0xFFFFF000;
                     cpu->pc().data.reg32 += 2 + offset;
                 }
@@ -33,7 +33,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 						}
                     }
                 } else {
-                    //printf("Multiple load store (PUSH/POP)");
+                    printf("Multiple load store (PUSH/POP)");
                 }
             }
         } else {
@@ -50,7 +50,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                                     start_address += 4;
                                 }
                             }
-                            if(instruction & 0x0100) cpu->reg(PC).data.reg32 = cpu->r32(start_address);
+                            if(instruction & 0x0100) cpu->reg(PC).data.reg32 = cpu->r32(start_address) & 0xFFFFFFFE;
                             cpu->reg(SP).data.reg32 += 4 * num;
                         } else {
                             word start_address = cpu->reg(SP).data.reg32 - 4 * num;
@@ -69,7 +69,9 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                         else cpu->reg(SP).data.reg32 += offset;
                     }
                 } else {
-                    //printf("Load Address");
+                    word addr = instruction & 0x0800 ? (cpu->reg(SP).data.reg32) : (cpu->pc().data.reg32 + 2);
+                    addr += (instruction & 0xFF) << 2;
+                    cpu->reg((instruction >> 8) & 0x7).data.reg32 = addr;
                 }
             } else {
                 if(instruction & 0x1000) {

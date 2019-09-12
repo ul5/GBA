@@ -19,8 +19,8 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
 
                     disassembled = std::string("BL #") + int_to_hex(lr);
                 } else {
-                    word offset = (instruction & 0x3FF) << 1;
-                    if(offset & 0x0800) offset |= 0xF000;
+                    word offset = (instruction & 0x7FF) << 1;
+                    if(offset & 0x0800) offset |= 0xFFFFF000;
                     disassembled = std::string("B #") + int_to_hex(offset + cpu->pc().data.reg32 + 2);
                 }
             } else {
@@ -56,7 +56,7 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
                         else std::string("ADD SP, ") + int_to_hex(offset, 3);
                     }
                 } else {
-                    disassembled = std::string("ADD ") + reg_names[(instruction >> 8) & 0x7] + ", " + (instruction & 0x0800 ? "SP" : "PC") + ", " + int_to_hex(instruction & 0xFF);
+                    disassembled = std::string("ADR ") + reg_names[(instruction >> 8) & 0x7] + ", " + (instruction & 0x0800 ? "SP" : "PC") + ", " + int_to_hex((instruction & 0xFF) << 2);
                 }
             } else {
                 if(instruction & 0x1000) {

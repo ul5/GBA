@@ -24,17 +24,49 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
     CHANGE_FLAG set_v = NO_CHANGE;
     
     switch (opcode) {
-        case 0x0:
-            printf("AND");
+        case 0x0: // AND
+            {
+                dest.data.reg32 = arg1 & arg2;
+                set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+                set_z = (dest.data.reg32 == 0) ? SET : RESET;
+            }
             break;
-        case 0x1:
-            printf("EOR");
+        case 0x1: // EOR
+            {
+                dest.data.reg32 = arg1 ^ arg2;
+                set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+                set_z = (dest.data.reg32 == 0) ? SET : RESET;
+            }
             break;
-        case 0x2:
-            printf("SUB");
+        case 0x2: // SUB
+            {
+                word result = arg1 - arg2;
+
+                if(arg2 > arg1) cpu->reg(CPSR) |= FLAG_C;
+                else cpu->reg(CPSR) &= ~FLAG_C;
+                
+                if((result & 0x80000000) == (arg2 & 0x80000000) && (result & 0x80000000) != (arg1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
+                else cpu->reg(CPSR) &= ~FLAG_V;     
+
+                dest.data.reg32 = result;
+                set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+                set_z = (dest.data.reg32 == 0) ? SET : RESET;           
+            }
             break;
-        case 0x3:
-            printf("RSB");
+        case 0x3: // RSB
+            {
+                word result = arg2 - arg1;
+
+                if(arg1 > arg2) cpu->reg(CPSR) |= FLAG_C;
+                else cpu->reg(CPSR) &= ~FLAG_C;
+                
+                if((result & 0x80000000) == (arg1 & 0x80000000) && (result & 0x80000000) != (arg2 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
+                else cpu->reg(CPSR) &= ~FLAG_V;     
+
+                dest.data.reg32 = result;
+                set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+                set_z = (dest.data.reg32 == 0) ? SET : RESET;           
+            }
             break;
         case 0x4: // ADD
         {
@@ -46,16 +78,58 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             set_v = (arg1 & 0x80000000) == (arg2 & 0x80000000) && (arg1 & 0x80000000) != (out & 0x80000000) ? SET : RESET;
             
             dest.data.reg32 = out;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
         }
             break;
-        case 0x5:
-            printf("ADC");
+        case 0x5: // ADC
+        {
+            if(cpu->reg(CPSR) & FLAG_C) ++arg1;
+            word out = arg1 + arg2;
+            
+            set_n = out & 0x80000000 ? SET : RESET;
+            set_z = out == 0 ? SET : RESET;
+            set_c = ((uint64_t) arg1 + (uint64_t) arg2) > 0xFFFFFFFF ? SET : RESET;
+            set_v = (arg1 & 0x80000000) == (arg2 & 0x80000000) && (arg1 & 0x80000000) != (out & 0x80000000) ? SET : RESET;
+            
+            dest.data.reg32 = out;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
+        }
             break;
-        case 0x6:
-            printf("SBC");
+        case 0x6: // SBC
+        {
+            --arg2;
+            if(cpu->reg(CPSR) & FLAG_C) ++arg2;
+            word out = arg1 - arg2;
+            
+            if(arg2 > arg1) cpu->reg(CPSR) |= FLAG_C;
+            else cpu->reg(CPSR) &= ~FLAG_C;
+                
+            if((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
+            else cpu->reg(CPSR) &= ~FLAG_V;
+
+            dest.data.reg32 = out;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
+        }
             break;
-        case 0x7:
-            printf("RSC");
+        case 0x7: // RSC
+        {
+            --arg1;
+            if(cpu->reg(CPSR) & FLAG_C) ++arg1;
+            word out = arg2 - arg1;
+            
+            if(arg2 > arg1) cpu->reg(CPSR) |= FLAG_C;
+            else cpu->reg(CPSR) &= ~FLAG_C;
+                
+            if((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
+            else cpu->reg(CPSR) &= ~FLAG_V;
+
+            dest.data.reg32 = out;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
+        }
             break;
         case 0x8: // TST
         {
@@ -73,10 +147,6 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             break;
         case 0xA: // CMP
             {
-                if(!s) {
-                    printf("S bit should be set\n");
-                    s = true;
-                }
                 word out = arg1 - arg2;
                 set_n = (out & 0x80000000) ? SET : RESET;
                 set_z = (out == 0) ? SET : RESET;
@@ -84,23 +154,38 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
                 set_v = ((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) ? SET : RESET;
             }
             break;
-        case 0xB:
-            printf("CMN");
+        case 0xB: // Compare with add
+        {
+            word out = arg1 + arg2;
+            
+            set_n = out & 0x80000000 ? SET : RESET;
+            set_z = out == 0 ? SET : RESET;
+            set_c = ((uint64_t) arg1 + (uint64_t) arg2) > 0xFFFFFFFF ? SET : RESET;
+            set_v = (arg1 & 0x80000000) == (arg2 & 0x80000000) && (arg1 & 0x80000000) != (out & 0x80000000) ? SET : RESET;            
+        }
             break;
         case 0xC:
-            printf("ORR");
+            dest.data.reg32 = arg1 | arg2;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
             break;
         case 0xD: // MOV
             dest.data.reg32 = arg2;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
             break;
         case 0xE:
-            printf("BIC");
+            dest.data.reg32 = arg1 & ~arg2;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
             break;
         case 0xF:
-            printf("MVN");
+            dest.data.reg32 = ~arg2;
+            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+            set_z = (dest.data.reg32 == 0) ? SET : RESET;
             break;
     }
-    
+
     if(s) {        
         if(set_n == SET) cpu->reg(CPSR) |= FLAG_N;
         else if(set_n == RESET) cpu->reg(CPSR) &= ~FLAG_N;

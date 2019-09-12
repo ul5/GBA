@@ -74,13 +74,14 @@ Debugger::GUI::GUI(Debugger *debugger) : mDebugger(debugger) {
     font = TTF_OpenFont("Raleway-Regular.ttf", 18);
     
     debugger_window = SDL_CreateWindow("Debugger", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 700, 750, 0);
-    renderer = SDL_CreateRenderer(debugger_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(debugger_window, -1, SDL_RENDERER_ACCELERATED);
 }
 
 void Debugger::GUI::start() {
     SDL_ShowWindow(debugger_window);
 
     std::string text = "== ";
+    bool disassembled = false;
     
     SDL_Event e;
     bool running = true;
@@ -111,16 +112,25 @@ void Debugger::GUI::start() {
                 else if(e.key.keysym.sym == SDLK_RETURN) {
                     running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
                     animated = true;
+                    //text = "== ";
+                } else if(e.key.keysym.sym == SDLK_s) {
+                    animated = false;
+                } else if(e.key.keysym.sym == SDLK_l) {
+                    disassembled = !disassembled;
                 }
             }
         }
         
         if(animated && mDebugger->cpu->pc().data.reg32 != running_until) {
-            mDebugger->executeNextInstruction(false);
+            for(int i = 0; i < 10 && animated; i++) {
+                mDebugger->executeNextInstruction(disassembled);
+                if(mDebugger->cpu->pc().data.reg32 == running_until) animated = false;
+            }
         } else if(animated) {
             running_until = 0;
             animated = false;
         }
+        
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
         SDL_RenderClear(renderer);
@@ -137,6 +147,8 @@ void Debugger::GUI::start() {
             SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderDrawRect(renderer, &rect);
         }
+
+        renderText("Disassembling", 450, 200, disassembled ? 0xFF00FF00 : 0xFFFF0000);
 
         renderText(text.c_str(), 0, 600);
         renderDecompiler();

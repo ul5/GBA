@@ -60,7 +60,15 @@ bool Base::isConditionMet(byte condition, word cpsrContents) {
 word Base::shift(byte data, word reg, Base::RegisterSet set) {
 	word result = reg;
 	byte amt = data & 1 ? (set[(data >> 4) & 0xF].data.reg32 & 0xFF) : ((data >> 3) & 0x1F);
-    if(((data >> 4) & 0xF) == 0xF) printf("REGISTER IS PC!?!?!?\n");
+	
+	if(data & 1) {
+    	if(((data >> 4) & 0xF) == 0xF && (data & 1)) {
+			amt += 2;
+		} else {
+			amt += 4;
+		}
+	}
+
 	bool carryOut = false;
 	
 	switch((data >> 1) & 0x3) {

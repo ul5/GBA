@@ -79,16 +79,24 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                     printf("Multiply (accumulate)\n");
                 }
             }
-            else if ((instruction & 0x020000F0) == 0x000000B0) {
-                if (instruction & 0x00400000) {
-                    printf("hword data tranfer, immidiate offset\n");
+            else if ((instruction & 0x020000F0) == 0x00000090) {
+                bool pre = instruction & 0x01000000;
+                bool up = instruction & 0x00800000;
+                bool writeback = (instruction & 0x00200000) || !pre;
+                bool load = instruction & 0x0010000;
+                bool sig = instruction & 0x40;
+                bool half = instruction & 0x20;
+
+                word offset = 0;
+
+                if (instruction & 0x00400000) offset = (instruction & 0xF) | (((instruction >> 8) & 0xF) << 4);
+                else offset = cpu->reg(instruction & 0xF).data.reg32;
+
+                if(half) {
+                    
+                } else {
+
                 }
-                else {
-                    printf("hword data tranfer, register offset\n");
-                }
-            }
-            else if ((instruction & 0x020000D0) == 0x000000D0) {
-                printf("Signed data transfer (byte/hword)\n");
             }
             else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
                 word target_addr = cpu->reg(instruction & 0xF).data.reg32;
