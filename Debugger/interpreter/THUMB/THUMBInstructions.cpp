@@ -15,10 +15,12 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 
                     word addr = cpu->reg(LR).data.reg32;
                     cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 | 1;
+                    JUMP_TAKEN(cpu->pc().data.reg32, addr);
                     cpu->pc().data.reg32 = addr;
                 } else {
                     word offset = (instruction & 0x7FF) << 1;
                     if(offset & 0x0800) offset |= 0xFFFFF000;
+                    JUMP_TAKEN(cpu->pc().data.reg32, cpu->pc().data.reg32 + 2 + offset);
                     cpu->pc().data.reg32 += 2 + offset;
                 }
             } else {
@@ -29,11 +31,31 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 						if(Base::isConditionMet((instruction >> 8) & 0xF, cpu->reg(CPSR).data.reg32)) {
 							word offset = (instruction & 0xFF) << 1;
 							if(offset & 0x100) offset |= 0xFFFFFE00;
+                            JUMP_TAKEN(cpu->pc().data.reg32, cpu->pc().data.reg32 + 2 + offset);
 							cpu->pc().data.reg32 += offset + 2;
 						}
                     }
                 } else {
-                    printf("Multiple load store (PUSH/POP)");
+                    word rb = (instruction >> 8) & 0x7;
+                    int num = 0; for(int i = 0; i < 8; i++) if(instruction & (1 << i)) ++num;
+                    word addr = cpu->reg(rb).data.reg32;
+                    if(instruction & 0x0800) {
+                        for(int i = 0; i < 8; i++) {
+                            if(instruction & (1 << i)) {
+                                cpu->reg(i).data.reg32 = cpu->r32(addr);
+                                addr += 4;
+                            }
+                        }
+                        cpu->reg(rb) += 4 * num;
+                    } else {
+                        for(int i = 0; i < 8; i++) {
+                            if(instruction & (1 << i)) {
+                                cpu->w32(addr, cpu->reg(i).data.reg32);
+                                addr += 4;
+                            }
+                        }
+                        cpu->reg(rb) += 4 * num;
+                    }
                 }
             }
         } else {
@@ -125,6 +147,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 					case 3: // BX
 					{
 						word addr = a2;
+                        JUMP_TAKEN(cpu->pc().data.reg32, addr);
 						cpu->pc().data.reg32 = addr & 0xFFFFFFFE;
 						if(!(addr & 1)) cpu->reg(CPSR) &= ~FLAG_T;
 					}

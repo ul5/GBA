@@ -91,7 +91,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
 
                 if (instruction & 0x00400000) offset = (instruction & 0xF) | (((instruction >> 8) & 0xF) << 4);
                 else offset = cpu->reg(instruction & 0xF).data.reg32;
-
+                printf("Load / Store halfword");
                 if(half) {
                     
                 } else {
@@ -100,6 +100,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
             }
             else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
                 word target_addr = cpu->reg(instruction & 0xF).data.reg32;
+                JUMP_TAKEN(cpu->pc().data.reg32, target_addr);
                 cpu->pc().data.reg32 = target_addr & 0xFFFFFFFE;
                 if(target_addr & 1) {
                     cpu->reg(CPSR) |= FLAG_T;

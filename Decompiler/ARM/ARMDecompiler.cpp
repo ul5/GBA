@@ -173,6 +173,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
  				}
 			}
 			else if ((instruction & 0x020000F0) == 0x000000B0) {
+                disassembled = "#####################LDRH/STRH"
 				if (instruction & 0x00400000) {
 					//printf("hword data tranfer, immidiate offset");
 				}
@@ -189,7 +190,8 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
 				disassembled = std::string("BX ") + reg_names[instruction & 0xF];
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x003F0000 && (instruction & 0x00000FFF) == 0x00000FFF) {
                 //printf("MRS");
-                    disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
+                disassembled = "MRS";
+                disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003FFFF0) == 0x0029F000) {
                 if(instruction & (1 << 22)) disassembled = std::string("MSR SPSR, ") + reg_names[instruction & 0xF];
                 else disassembled = std::string("MSR CPSR, ") + reg_names[instruction & 0xF];

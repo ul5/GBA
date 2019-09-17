@@ -61,9 +61,9 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
             } else {
                 if(instruction & 0x1000) {
                     if(instruction & 0x0800) disassembled = std::string("LDR ") + reg_names[(instruction >> 8) & 0x7] + "[SP ";
-                    else disassembled = std::string("STR ") + reg_names[(instruction >> 8) & 0x7] + "[SP ";
+                    else disassembled = std::string("STR ") + reg_names[(instruction >> 8) & 0x7] + ", [SP ";
                     
-                    disassembled = disassembled + int_to_hex((instruction & 0xFF) << 2, 3);
+                    disassembled = disassembled + int_to_hex((instruction & 0xFF) << 2, 3) + "]";
                     
                 } else {
                     if(instruction & 0x0100) disassembled = std::string("LDRH ");
