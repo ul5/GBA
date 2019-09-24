@@ -1,4 +1,5 @@
 #include "Logic.h"
+#include <iostream>
 
 bool Base::isConditionMet(byte condition, word cpsrContents) {
 	bool retVal = false;
@@ -111,7 +112,7 @@ word Base::rotate(byte value, byte rotate, Base::RegisterSet set, bool set_cond)
 	
 	res = (res >> amt) | (res << (32 - amt));
 	
-	if(set_cond) {
+	if(set_cond && amt != 0) {
 		if(res & 0x80000000) set[CPSR].data.reg32 |= FLAG_C;
 		else set[CPSR].data.reg32 &= ~FLAG_C;
 	}

@@ -260,7 +260,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
                 if(opcode <= 0x8 || opcode >= 0xA) disassembled = disassembled + " " + reg_names[(instruction >> 12) & 0xF] + ", ";
                 if(opcode != 0xD) disassembled = disassembled + " " + reg_names[(instruction >> 16) & 0xF] + ", ";
                 
-                if(imm) disassembled = disassembled + "#" + int_to_hex(Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF, *cpu->set, false), 8);
+                if(imm) disassembled = disassembled + " This is a rotate right, thus we should get 0 as carry flag... #" + int_to_hex(Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF, *cpu->set, false), 8);
                 else {
                     disassembled = disassembled + "[" + reg_names[instruction & 0xF] + " ";
                     const char *shift = (instruction & 0x40) ? (instruction & 0x20 ? "ROR" : "ASR") : (instruction & 0x20 ? "LSR" : "LSL");
