@@ -54,7 +54,7 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
             {
                 res = op1 - op2;
 
-                if(op2 > op1) cpu->reg(CPSR) |= FLAG_C;
+                if(op2 < op1) cpu->reg(CPSR) |= FLAG_C;
                 else cpu->reg(CPSR) &= ~FLAG_C;
                 
                 if((res & 0x80000000) == (op2 & 0x80000000) && (res & 0x80000000) != (op1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;

@@ -3,6 +3,7 @@
 Base::RegisterSet::RegisterSet() {
 	allocateRegisters();
 	for(int i = 0; i < 37; i++) allRegisters[i]->data.reg32 = 0; // memset to 0
+	for(int i = 0; i < 6; i++) registerBanks[i][SP]->data.reg32 = 0x03007F00;
 }
 
 Base::RegisterSet::~RegisterSet() {

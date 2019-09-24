@@ -150,7 +150,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
                 word out = arg1 - arg2;
                 set_n = (out & 0x80000000) ? SET : RESET;
                 set_z = (out == 0) ? SET : RESET;
-                set_c = (arg2 > arg1) ? SET : RESET;
+                set_c = (arg2 < arg1) ? SET : RESET;
                 set_v = ((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) ? SET : RESET;
             }
             break;
