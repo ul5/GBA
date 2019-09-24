@@ -12,10 +12,10 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
     if(((instruction >> 16) & 0xF) == 0xF) arg1 += 4;
     word arg2 = instruction & 0xFFF;
     
-    if(imm) arg2 = Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF);
+    if(imm) arg2 = Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF, *cpu->set, true);
     else {
         word reg = cpu->reg(instruction & 0xF).data.reg32 + ((instruction & 0xF) == 0xF ? 4 : 0);
-        arg2 = Base::shift((instruction >> 4) & 0xFF, reg, *cpu->set);
+        arg2 = Base::shift((instruction >> 4) & 0xFF, reg, *cpu->set, true);
     }
     
     CHANGE_FLAG set_n = NO_CHANGE;
@@ -75,6 +75,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             set_n = out & 0x80000000 ? SET : RESET;
             set_z = out == 0 ? SET : RESET;
             set_c = ((uint64_t) arg1 + (uint64_t) arg2) > 0xFFFFFFFF ? SET : RESET;
+
             set_v = (arg1 & 0x80000000) == (arg2 & 0x80000000) && (arg1 & 0x80000000) != (out & 0x80000000) ? SET : RESET;
             
             dest.data.reg32 = out;

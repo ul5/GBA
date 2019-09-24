@@ -20,22 +20,32 @@ class EmuParser():
 def diff(mgba_data, my_data):
     for i in range(22, len(my_data)): # First 21 are a little bit wonky with the setup
         for k, v in my_data[i].items():
+            if k == 'instr':
+                continue
             if k not in mgba_data[i] or mgba_data[i][k] != v:
                 if k != 'cpsr':
                     print(f"DIFF AT: Index {i} for the key {k}")
                     print(f"\tReal data: {mgba_data[i]}")
                     print(f"\tNew  data: {my_data[i]}")
+                    print("Previous instruction:")
+                    print(f"\tReal data: {mgba_data[i-1]}")
+                    print(f"\tNew  data: {my_data[i-1]}")
                     input()
                     #return
                 else:
                     print("WARN: CPSR DIFFERENT")   
                     print(f"\tReal data: {mgba_data[i]}")
                     print(f"\tNew  data: {my_data[i]}")
+                    print("Previous instruction:")
+                    print(f"\tReal data: {mgba_data[i-2]}")
+                    print(f"\tNew  data: {my_data[i-2]}")
+                    print(f"\tReal data: {mgba_data[i-1]}")
+                    print(f"\tNew  data: {my_data[i-1]}")
                     input()         
                     continue
-        print("OK")
-        print(f"\tReal data: {mgba_data[i]}")
-        print(f"\tNew  data: {my_data[i]}")
+
+        print(f"\t{mgba_data[i]['instr']}")
+        #print(f"\tNew  data: {my_data[i]}")
 
     print("No diff... all ok")
 
@@ -52,7 +62,7 @@ if __name__ == "__main__":
     
     file = []
     regs = {}
-    for line in out[3:]:
+    for line in out[4:]:
         if "Jump " in line:
             continue
         if "[DEBUGGER]" in line:
@@ -72,6 +82,9 @@ if __name__ == "__main__":
             if "SPSR" in line:
                 file.append(regs)
                 regs = {}
+
+        if "==>" in line:
+            file[-1]['instr'] = line[12:]
 
     diff(data, file)
             

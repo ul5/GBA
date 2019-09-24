@@ -57,7 +57,7 @@ bool Base::isConditionMet(byte condition, word cpsrContents) {
 	return retVal;
 }
 
-word Base::shift(byte data, word reg, Base::RegisterSet set) {
+word Base::shift(byte data, word reg, Base::RegisterSet set, bool set_cond) {
 	word result = reg;
 	byte amt = data & 1 ? (set[(data >> 4) & 0xF].data.reg32 & 0xFF) : ((data >> 3) & 0x1F);
 	
@@ -73,7 +73,7 @@ word Base::shift(byte data, word reg, Base::RegisterSet set) {
 	
 	switch((data >> 1) & 0x3) {
 		case 0: // Logical left
-			carryOut = amt == 0 ? (set[CPSR].data.reg32 & FLAG_C) : result & (1 << (31 - amt)); // If amount is 0, don't change FLAG_C
+			carryOut = amt == 0 ? (set[CPSR].data.reg32 & FLAG_C) : (result & (1 << (32 - amt))); // If amount is 0, don't change FLAG_C
 			result <<= amt;
 			break;
 		case 1: // Logical right
@@ -97,17 +97,24 @@ word Base::shift(byte data, word reg, Base::RegisterSet set) {
 			break;
 	}
 	
-	if(carryOut) set[CPSR].data.reg32 |= FLAG_C;
-	else set[CPSR].data.reg32 &= ~FLAG_C;
+	if(set_cond) {
+		if(carryOut) set[CPSR].data.reg32 |= FLAG_C;
+		else set[CPSR].data.reg32 &= ~FLAG_C;
+	}
 
 	return result;
 }
 
-word Base::rotate(byte value, byte rotate) {
+word Base::rotate(byte value, byte rotate, Base::RegisterSet set, bool set_cond) {
 	word amt = rotate * 2;
 	word res = value;
 	
 	res = (res >> amt) | (res << (32 - amt));
 	
+	if(set_cond) {
+		if(res & 0x80000000) set[CPSR].data.reg32 |= FLAG_C;
+		else set[CPSR].data.reg32 &= ~FLAG_C;
+	}
+
 	return res;
 }
