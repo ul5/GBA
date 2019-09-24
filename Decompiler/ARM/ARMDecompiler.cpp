@@ -173,7 +173,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
  				}
 			}
 			else if ((instruction & 0x020000F0) == 0x000000B0) {
-                disassembled = "#####################LDRH/STRH"
+                disassembled = "#####################LDRH/STRH";
 				if (instruction & 0x00400000) {
 					//printf("hword data tranfer, immidiate offset");
 				}

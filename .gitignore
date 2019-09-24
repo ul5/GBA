@@ -1,4 +1,7 @@
 *.o
 bin/*
+libs/**
+*.sav
+*.swp
 GBA/bios.gba
 GBA/emerald.gba
