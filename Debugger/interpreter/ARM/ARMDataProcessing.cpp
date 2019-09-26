@@ -57,7 +57,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             {
                 word result = arg2 - arg1;
 
-                if(arg1 > arg2) cpu->reg(CPSR) |= FLAG_C;
+                if(arg1 <= arg2) cpu->reg(CPSR) |= FLAG_C;
                 else cpu->reg(CPSR) &= ~FLAG_C;
                 
                 if((result & 0x80000000) == (arg1 & 0x80000000) && (result & 0x80000000) != (arg2 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;

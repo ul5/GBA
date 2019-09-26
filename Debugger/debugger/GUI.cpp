@@ -122,8 +122,9 @@ void Debugger::GUI::start() {
         }
         
         if(animated && mDebugger->cpu->pc().data.reg32 != running_until) {
-            for(int i = 0; i < 10 && animated; i++) {
+            for(int i = 0; i < 100 && animated; i++) {
                 mDebugger->executeNextInstruction(disassembled);
+                if(disassembled) mDebugger->printRegisters();
                 if(mDebugger->cpu->pc().data.reg32 == running_until) animated = false;
             }
         } else if(animated) {

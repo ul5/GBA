@@ -23,6 +23,10 @@ class EmuParser():
 
 def diff(mgba_data, my_data):
     for i in range(22, len(my_data)): # First 21 are a little bit wonky with the setup
+        if i >= len(mgba_data):
+            print("Congrats")
+            break
+
         for k, v in my_data[i].items():
             if k == 'instr' or k == 'r15':
                 continue

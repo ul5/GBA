@@ -63,10 +63,8 @@ word Base::shift(byte data, word reg, Base::CPU *cpu, bool set_cond) {
 	byte amt = data & 1 ? (cpu->reg((data >> 4) & 0xF).data.reg32 & 0xFF) : ((data >> 3) & 0x1F);
 	
 	if(data & 1) {
-    	if(((data >> 4) & 0xF) == 0xF && (data & 1)) {
-			amt += 2;
-		} else {
-			amt += 4;
+    	if(((data >> 4) & 0xF) == 0xF) {
+			amt += cpu->reg(CPSR) & FLAG_T ? 2 : 4;
 		}
 	}
 
