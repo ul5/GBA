@@ -2,7 +2,8 @@
 
 Base::MMU::MMU() {
 	bios = Base::readFile("bios.gba").data; //(byte*) malloc(0x4000);
-    cart = Base::readFile("emerald.gba").data;
+	filedata cartridge_full = Base::readFile("emerald.gba");
+    cart = cartridge_full.data;
     
 	wram_1 = (byte*) malloc(0x40000);
 	wram_2 = (byte*) malloc(0x8000);
@@ -10,6 +11,9 @@ Base::MMU::MMU() {
 	palette = (byte*) malloc(0x400);
 	vram = (byte*) malloc(0x18000);
 	oam = (byte*) malloc(0x400);
+
+	null_page = (byte*) malloc(1);
+	null_page[0] = 0;
 	
     memset(wram_1, 0, 0x40000);
     memset(wram_2, 0, 0x8000);
@@ -28,24 +32,26 @@ Base::MMU::MMU() {
 	memory[0x6] = vram;
 	memory[0x7] = oam;
 	
-	memory[0x8] = cart + 0x1000000 * 0;
-	memory[0x9] = cart + 0x1000000 * 1;
-	memory[0xA] = cart + 0x1000000 * 2;
-	memory[0xB] = cart + 0x1000000 * 3;
-	memory[0xC] = cart + 0x1000000 * 4;
-	memory[0xD] = cart + 0x1000000 * 5;
+
+	for(int i = 0; i < 6; i++) {
+		memory[0x8 + i] = cartridge_full.size >= 0x1000000 * i ? cart + 0x1000000 * i : null_page;
+		word size = cartridge_full.size - 0x1000000 * i;
+		bit_masks[0x8 + i] = cartridge_full.size >= 0x1000000 * i ? (size > 0x1000000 ? 0xFFFFFF : size) : 0; 
+	}
+
 	memory[0xE] = cart; // Actually cart_ram
 	
-	bit_masks[0] = 0x00FFFFFF;
-	bit_masks[1] = 0x00FFFFFF;
-	bit_masks[2] = 0x0003FFFF;
-	bit_masks[3] = 0x00007FFF;
-	bit_masks[4] = 0x00FFFFFF;
-	bit_masks[5] = 0x000003FF;
-	bit_masks[6] = 0x00017FFF;
-	bit_masks[7] = 0x000003FF;
-	
-	for(int i = 8; i < 16; i++) bit_masks[i] = 0x00FFFFFF;
+	bit_masks[0] = 0x00FFFFFF + 1;
+	bit_masks[1] = 0x00FFFFFF + 1;
+	bit_masks[2] = 0x0003FFFF + 1;
+	bit_masks[3] = 0x00007FFF + 1;
+	bit_masks[4] = 0x00FFFFFF + 1;
+	bit_masks[5] = 0x000003FF + 1;
+	bit_masks[6] = 0x00017FFF + 1;
+	bit_masks[7] = 0x000003FF + 1;
+
+	// Default values for IO:
+	w32(0x04000088, 0x200);
 }
 
 Base::MMU::~MMU() {

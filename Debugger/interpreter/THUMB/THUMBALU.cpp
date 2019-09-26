@@ -3,8 +3,13 @@
 void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
     word res = 0;
     
+    /**
     word op1 = cpu->reg((instruction >> 3) & 0x7).data.reg32;
     word op2 = cpu->reg(instruction & 0x7).data.reg32;
+    */
+
+    word op1 = cpu->reg(instruction & 0x7).data.reg32;
+    word op2 = cpu->reg((instruction >> 3) & 0x7).data.reg32;
     
     bool write = true;
     
@@ -54,7 +59,7 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
             {
                 res = op1 - op2;
 
-                if(op2 < op1) cpu->reg(CPSR) |= FLAG_C;
+                if(op2 <= op1) cpu->reg(CPSR) |= FLAG_C;
                 else cpu->reg(CPSR) &= ~FLAG_C;
                 
                 if((res & 0x80000000) == (op2 & 0x80000000) && (res & 0x80000000) != (op1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
@@ -79,7 +84,7 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
             res = op1 & ~op2;
             break;
         case 0xF:
-            res = ~op1;
+            res = ~op2;
             break;
         default:
             break;

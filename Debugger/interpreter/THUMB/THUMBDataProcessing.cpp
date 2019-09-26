@@ -14,7 +14,7 @@ void Debugger::thumb_data_processing(hword instruction, Base::CPU *cpu) {
             {
                 word r = result - off;
 
-                if(off > result) cpu->reg(CPSR) |= FLAG_C;
+                if(off <= result) cpu->reg(CPSR) |= FLAG_C;
                 else cpu->reg(CPSR) &= ~FLAG_C;
                 
                 if((r & 0x80000000) == (off & 0x80000000) && (r & 0x80000000) != (result & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
@@ -26,9 +26,17 @@ void Debugger::thumb_data_processing(hword instruction, Base::CPU *cpu) {
             }
             break;
         case 2:
+            if(((uint64_t) result + (uint64_t) off) > 0xFFFFFFFF) cpu->reg(CPSR) |= FLAG_C;
+            else cpu->reg(CPSR) &= ~FLAG_C;
+            if((result & 0x80000000) == (off & 0x80000000) && (result & 0x80000000) != ((result + off) & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
+            else cpu->reg(CPSR) &= ~FLAG_V;
             result += off;
             break;
         case 3:
+            if(off <= result) cpu->reg(CPSR) |= FLAG_C;
+            else cpu->reg(CPSR) &= ~FLAG_C;
+            if ((((result - off) & 0x80000000) == (off & 0x80000000) && ((result - off) & 0x80000000) != (result & 0x80000000))) cpu->reg(CPSR) |= FLAG_V;
+            else cpu->reg(CPSR) &= ~FLAG_V;
             result -= off;
             break;
     }

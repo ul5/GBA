@@ -15,12 +15,16 @@ class EmuParser():
         fcntl.fcntl(self.proc.stderr.fileno(), fcntl.F_SETFL, os.O_NONBLOCK)
 
     def interact(self):
-        return self.proc.communicate()[0].decode()
+        out = self.proc.communicate()
+        if out[1]:
+            print(out[1])
+            input()
+        return out[0].decode()
 
 def diff(mgba_data, my_data):
     for i in range(22, len(my_data)): # First 21 are a little bit wonky with the setup
         for k, v in my_data[i].items():
-            if k == 'instr':
+            if k == 'instr' or k == 'r15':
                 continue
             if k not in mgba_data[i] or mgba_data[i][k] != v:
                 if k != 'cpsr':
@@ -44,10 +48,19 @@ def diff(mgba_data, my_data):
                     input()         
                     continue
 
-        print(f"\t{mgba_data[i]['instr']}")
+        if 'instr' not in mgba_data[i] or 'instr' not in my_data[i]:
+            print("What the hell is going on?")
+            print(mgba_data[i - 1])
+            print(my_data[i - 1])
+            print("")
+            print(mgba_data[i])
+            print(my_data[i])
+            #input()
+
+        #print(f"\t{mgba_data[i]['r15']}: {mgba_data[i]['instr']} == {my_data[i]['instr']}")
         #print(f"\tNew  data: {my_data[i]}")
 
-    print("No diff... all ok")
+    print(f"No diff... all ok ({len(my_data)} records/instructions executed)")
 
 if __name__ == "__main__":
     p = EmuParser()
@@ -65,7 +78,7 @@ if __name__ == "__main__":
     for line in out[4:]:
         if "Jump " in line:
             continue
-        if "[DEBUGGER]" in line:
+        elif "[DEBUGGER]" in line:
             for reg in line[10:].split(",")[:-1]:
                 reg_name = reg.split('=')[0].strip()
                 reg_value = reg.split('=')[1].strip()
@@ -74,7 +87,7 @@ if __name__ == "__main__":
                 elif reg_name == 'LR':
                     reg_name = 'r14'
                 elif reg_name == 'PC':
-                    continue
+                    reg_name = 'r15'
                 elif reg_name == 'SPSR':
                     continue
 
@@ -82,9 +95,10 @@ if __name__ == "__main__":
             if "SPSR" in line:
                 file.append(regs)
                 regs = {}
-
-        if "==>" in line:
+        elif "==>" in line:
             file[-1]['instr'] = line[12:]
+        else:
+            print(line)
 
     diff(data, file)
             

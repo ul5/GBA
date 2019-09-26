@@ -91,7 +91,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                         else cpu->reg(SP).data.reg32 += offset;
                     }
                 } else {
-                    word addr = instruction & 0x0800 ? (cpu->reg(SP).data.reg32) : (cpu->pc().data.reg32 + 2);
+                    word addr = instruction & 0x0800 ? (cpu->reg(SP).data.reg32) : ((cpu->pc().data.reg32 + 2) & 0xFFFFFFFC);
                     addr += (instruction & 0xFF) << 2;
                     cpu->reg((instruction >> 8) & 0x7).data.reg32 = addr;
                 }
@@ -103,16 +103,16 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                 } else {
                     word addr = cpu->reg((instruction >> 3) & 0x7).data.reg32;
                     addr += ((instruction >> 6) & 0x1F) << 1; // Offset
-                    if(instruction & 0x0100) cpu->reg(instruction & 0x7).data.reg32 = cpu->r16(addr);
-                    else cpu->w16(addr, cpu->reg(instruction & 0x7).data.reg32 & 0xFFFF);
+                    if(instruction & 0x0800) cpu->reg(instruction & 0x7).data.reg32 = cpu->r16(addr); // LDRH
+                    else cpu->w16(addr, cpu->reg(instruction & 0x7).data.reg32 & 0xFFFF); // STRH
                 }
             }
         }
     } else {
         if(instruction & 0x4000) {
-            if((instruction & 0x1C00) == 0x0000) { // 467B = 010001100 1111 011
+            if((instruction & 0xFC00) == 0x4000) { // 467B = 010001100 1111 011
                 thumb_alu(instruction, cpu);
-            } else if((instruction & 0x1C00) == 0x0400) {
+            } else if((instruction & 0xFC00) == 0x4400) {
                 word a1 = cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32;
                 word a2 = cpu->reg((instruction >> 3) & 0xF).data.reg32;
 
@@ -133,7 +133,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                         if(out & 0x80000000) cpu->reg(CPSR).data.reg32 |= FLAG_N;
                         else cpu->reg(CPSR).data.reg32 &= ~FLAG_N;
 
-                        if(a2 < a1) cpu->reg(CPSR).data.reg32 |= FLAG_C;
+                        if(a2 <= a1) cpu->reg(CPSR).data.reg32 |= FLAG_C;
                         else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
                         
                         if((a1 & 0x80000000) != (a2 & 0x80000000) && (a1 & 0x80000000) == (a2 & 0x80000000)) cpu->reg(CPSR).data.reg32 |= FLAG_V;
@@ -153,13 +153,37 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 					}
 						break;
 				}
-            } else if((instruction & 0x1800) == 0x0800) {
-                cpu->reg((instruction >> 8) & 0x7) = cpu->r32(((cpu->pc().data.reg32 + 2) & 0xFFFFFFFC) + ((instruction & 0xFF) << 2));
-            } else if(instruction & 0x2000) {
-                //printf("Load/Store with immidiate offset");
-            } else if(instruction & 0x0200) {
-                //printf("Load/Store with sign extended halfword");
-            } else {
+            } else if((instruction & 0xF800) == 0x4800) {
+                word addr = (cpu->pc().data.reg32 + 2) & 0xFFFFFFFC;
+                addr += (instruction & 0xFF) << 2;
+                cpu->reg((instruction >> 8) & 0x7) = cpu->r32(addr); // PC relative load
+            } else if(instruction & 0x2000) { // Load/Store with immidiate offset
+                word addr = cpu->reg((instruction >> 3) & 0x7).data.reg32;
+                word off = ((instruction >> 6) & 0x1F);
+                if(instruction & 0x1000) {
+                    if(instruction & 0x0800) cpu->reg(instruction & 0x7).data.reg32 = (word) cpu->r8(addr + off);
+                    else cpu->w8(addr + off, cpu->reg(instruction & 0x7).data.reg32 & 0xFF);
+                } else {
+                    if(instruction & 0x0800) cpu->reg(instruction & 0x7).data.reg32 = cpu->r32(addr + (off << 2));
+                    else cpu->w32(addr + (off << 2), cpu->reg(instruction & 0x7).data.reg32);
+                }
+            } else if(instruction & 0x0200) { // Load/Store with sign extended halfword
+                word addr = cpu->reg((instruction >> 3) & 0x7).data.reg32 + cpu->reg((instruction >> 6) & 0x7).data.reg32;
+                if(instruction & 0x0400) { // Sign extend
+                    if(instruction & 0x0800) {
+                        word res = cpu->r16(addr);
+                        res |= ((res & 0x8000) ? 0xFFFF0000 : 0x00000000);
+                        cpu->reg(instruction & 0x7).data.reg32 = res;
+                    } else {
+                        word res = cpu->r8(addr);
+                        res |= ((res & 0x80) ? 0xFFFFFF00 : 0x00000000);
+                        cpu->reg(instruction & 0x7).data.reg32 = res;
+                    }
+                } else { // Do not sign extend
+                    if(instruction & 0x0800) cpu->reg(instruction & 0x7).data.reg32 = (word) cpu->r16(addr);
+                    else cpu->w16(addr, cpu->reg(instruction & 0x7).data.reg32 & 0xFFFF);
+                }
+            } else { // Load store with register offset
                 word addr = (cpu->reg((instruction >> 3) & 0x7).data.reg32 + cpu->reg((instruction >> 6) & 0x7).data.reg32);
                 if(instruction & 0x0800) {
                     if(instruction & 0x0400) cpu->reg(instruction & 0x7).data.reg32 = (word) cpu->r8(addr);
@@ -216,15 +240,15 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
 					{
 						word a1 = cpu->reg((instruction >> 3) & 0x7).data.reg32;
 						word a2 = instruction & 0x0400 ? ((instruction >> 6) & 0x7) : cpu->reg(((instruction >> 6) & 0x7)).data.reg32;
-						if(instruction & 0x0200) {
+						if(instruction & 0x0200) { // SUB
 							cpu->reg(instruction & 0x7).data.reg32 = a1 - a2;
 							
-							if(a2 > a1) cpu->reg(CPSR).data.reg32 |= FLAG_C;
+							if(a2 <= a1) cpu->reg(CPSR).data.reg32 |= FLAG_C;
 							else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
 							
 							if((a2 & 0x80000000) != (a1 & 0x80000000) && (a1 & 0x80000000) == ((a1-a2) & 0x80000000)) cpu->reg(CPSR).data.reg32 |= FLAG_V;
 							else cpu->reg(CPSR).data.reg32 &= ~FLAG_V;
-						} else {
+						} else { // ADD
 							cpu->reg(instruction & 0x7).data.reg32 = a1 + a2;
 							
 							if((uint64_t) a2 + (uint64_t) a1 >= 0x100000000) cpu->reg(CPSR).data.reg32 |= FLAG_C;

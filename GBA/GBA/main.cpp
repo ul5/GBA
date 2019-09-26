@@ -6,8 +6,8 @@
 int main(int argc, const char **args) {
     printf("[INFO] Starting GBA Emulator in %s\n", args[0]);
     Debugger::Interpreter *interpreter = new Debugger::Interpreter();
-    for(int i = 0; interpreter->pc().data.reg32 != 0x6cc; i++) {
-        interpreter->executeNextInstruction();
+    for(int i = 0; interpreter->pc().data.reg32 != 0x1098; i++) {
+        interpreter->executeNextInstruction(true);
         interpreter->printRegisters();
     }
     

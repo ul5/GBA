@@ -1,6 +1,6 @@
 #pragma once
 
-#define _DEBUG_JUMPS
+//#define _DEBUG_JUMPS
 
 #ifdef _DEBUG_JUMPS
 #  define JUMP_TAKEN(x, y) printf("[DEBUGGER][DEBUG] Jump taken to from %.08X to %.08X\n", x, y)

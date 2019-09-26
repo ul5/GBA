@@ -58,9 +58,9 @@ bool Base::isConditionMet(byte condition, word cpsrContents) {
 	return retVal;
 }
 
-word Base::shift(byte data, word reg, Base::RegisterSet set, bool set_cond) {
+word Base::shift(byte data, word reg, Base::CPU *cpu, bool set_cond) {
 	word result = reg;
-	byte amt = data & 1 ? (set[(data >> 4) & 0xF].data.reg32 & 0xFF) : ((data >> 3) & 0x1F);
+	byte amt = data & 1 ? (cpu->reg((data >> 4) & 0xF).data.reg32 & 0xFF) : ((data >> 3) & 0x1F);
 	
 	if(data & 1) {
     	if(((data >> 4) & 0xF) == 0xF && (data & 1)) {
@@ -74,7 +74,7 @@ word Base::shift(byte data, word reg, Base::RegisterSet set, bool set_cond) {
 	
 	switch((data >> 1) & 0x3) {
 		case 0: // Logical left
-			carryOut = amt == 0 ? (set[CPSR].data.reg32 & FLAG_C) : (result & (1 << (32 - amt))); // If amount is 0, don't change FLAG_C
+			carryOut = amt == 0 ? (cpu->reg(CPSR).data.reg32 & FLAG_C) : (result & (1 << (32 - amt))); // If amount is 0, don't change FLAG_C
 			result <<= amt;
 			break;
 		case 1: // Logical right
@@ -90,7 +90,7 @@ word Base::shift(byte data, word reg, Base::RegisterSet set, bool set_cond) {
 		case 3: // rotate right
 			if(amt == 0) { // RRX
 				carryOut = result & 1;
-				result = (result >> 1) | (set[CPSR].data.reg32 & FLAG_C ? 0x10000000 : 0);
+				result = (result >> 1) | (cpu->reg(CPSR).data.reg32 & FLAG_C ? 0x10000000 : 0);
 			} else {
 				carryOut = result & (1 << (amt - 1));
 				result = (result >> amt) | (result << (32 - amt));
@@ -99,22 +99,22 @@ word Base::shift(byte data, word reg, Base::RegisterSet set, bool set_cond) {
 	}
 	
 	if(set_cond) {
-		if(carryOut) set[CPSR].data.reg32 |= FLAG_C;
-		else set[CPSR].data.reg32 &= ~FLAG_C;
+		if(carryOut) cpu->reg(CPSR).data.reg32 |= FLAG_C;
+		else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
 	}
 
 	return result;
 }
 
-word Base::rotate(byte value, byte rotate, Base::RegisterSet set, bool set_cond) {
+word Base::rotate(byte value, byte rotate, Base::CPU *cpu, bool set_cond) {
 	word amt = rotate * 2;
 	word res = value;
 	
 	res = (res >> amt) | (res << (32 - amt));
 	
 	if(set_cond && amt != 0) {
-		if(res & 0x80000000) set[CPSR].data.reg32 |= FLAG_C;
-		else set[CPSR].data.reg32 &= ~FLAG_C;
+		if(res & 0x80000000) cpu->reg(CPSR).data.reg32 |= FLAG_C;
+		else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
 	}
 
 	return res;

@@ -66,15 +66,15 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
                     disassembled = disassembled + int_to_hex((instruction & 0xFF) << 2, 3) + "]";
                     
                 } else {
-                    if(instruction & 0x0100) disassembled = std::string("LDRH ");
+                    if(instruction & 0x0800) disassembled = std::string("LDRH ");
                     else disassembled = std::string("STRH ");
-                    disassembled = disassembled + reg_names[instruction & 0x7] + ", [" + reg_names[(instruction >> 3) & 0x7] + int_to_hex(((instruction >> 6) & 0x1F) << 1, 2) + "]";
+                    disassembled = disassembled + reg_names[instruction & 0x7] + ", [" + reg_names[(instruction >> 3) & 0x7] + ", #" + int_to_hex(((instruction >> 6) & 0x1F) << 1, 2) + "] (" + int_to_hex(cpu->r32((((instruction >> 6) & 0x1F) << 1) + cpu->reg((instruction >> 3) & 0x7).data.reg32), 8) + ")";
                 }
             }
         }
     } else {
         if(instruction & 0x4000) {
-            if((instruction & 0x1C00) == 0x0000) {
+            if((instruction & 0xFC00) == 0x4000) {
                 switch ((instruction >> 6) & 0xF) {
                     case 0x0:
                         disassembled = std::string("AND ");
@@ -129,7 +129,7 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
                 }
                 
                 disassembled = disassembled + reg_names[instruction & 0x7] + ", " + reg_names[(instruction >> 3) & 0x7];
-            } else if((instruction & 0x1C00) == 0x0400) {
+            } else if((instruction & 0xFC00) == 0x4400) {
 				switch((instruction >> 8) & 3) {
 					case 0:
                         disassembled = std::string("ADD ") + reg_names[(instruction & 0x7) | ((instruction >> 4) & 0x8)] + ", " + reg_names[(instruction >> 3) & 0xF];
@@ -144,7 +144,7 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
 						disassembled = std::string("BX ") + reg_names[(instruction >> 3) & 0xF];
 						break;
 				}
-            } else if((instruction & 0x1800) == 0x0800) {
+            } else if((instruction & 0xF800) == 0x4800) {
                 word res = cpu->r32(((cpu->pc().data.reg32 + 2) & 0xFFFFFFFC) + ((instruction & 0xFF) << 2));
                 disassembled = std::string("LDR ") + reg_names[(instruction >> 8) & 0x7] + ", =" + int_to_hex(res);
             } else if(instruction & 0x2000) {
@@ -155,7 +155,7 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
                 word off = (instruction >> 6) & 0x1F;
                 if(instruction & 0x1000) off <<= 2;
 
-                disassembled = disassembled + reg_names[(instruction & 0x7)] + ", [" + reg_names[(instruction >> 3) & 0x7] + ", #" + int_to_hex(off, 0) + "]";
+                disassembled = disassembled + " " + reg_names[(instruction & 0x7)] + ", [" + reg_names[(instruction >> 3) & 0x7] + ", #" + int_to_hex(off, 0) + "]";
             } else if(instruction & 0x0200) {
                 if((instruction & 0x0C00) == 0x0C00) disassembled = std::string("STRH ");
                 else if(instruction & 0x0800) disassembled = std::string("LDRH ");

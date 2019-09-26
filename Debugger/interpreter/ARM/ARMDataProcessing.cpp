@@ -12,10 +12,10 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
     if(((instruction >> 16) & 0xF) == 0xF) arg1 += 4;
     word arg2 = instruction & 0xFFF;
     
-    if(imm) arg2 = Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF, *cpu->set, true);
+    if(imm) arg2 = Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF, cpu, s);
     else {
         word reg = cpu->reg(instruction & 0xF).data.reg32 + ((instruction & 0xF) == 0xF ? 4 : 0);
-        arg2 = Base::shift((instruction >> 4) & 0xFF, reg, *cpu->set, true);
+        arg2 = Base::shift((instruction >> 4) & 0xFF, reg, cpu, s);
     }
     
     CHANGE_FLAG set_n = NO_CHANGE;
@@ -42,7 +42,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             {
                 word result = arg1 - arg2;
 
-                if(arg2 > arg1) cpu->reg(CPSR) |= FLAG_C;
+                if(arg2 <= arg1) cpu->reg(CPSR) |= FLAG_C;
                 else cpu->reg(CPSR) &= ~FLAG_C;
                 
                 if((result & 0x80000000) == (arg2 & 0x80000000) && (result & 0x80000000) != (arg1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
@@ -79,8 +79,6 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             set_v = (arg1 & 0x80000000) == (arg2 & 0x80000000) && (arg1 & 0x80000000) != (out & 0x80000000) ? SET : RESET;
             
             dest.data.reg32 = out;
-            set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
-            set_z = (dest.data.reg32 == 0) ? SET : RESET;
         }
             break;
         case 0x5: // ADC
@@ -121,7 +119,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             if(cpu->reg(CPSR) & FLAG_C) ++arg1;
             word out = arg2 - arg1;
             
-            if(arg2 > arg1) cpu->reg(CPSR) |= FLAG_C;
+            if(arg2 <= arg1) cpu->reg(CPSR) |= FLAG_C;
             else cpu->reg(CPSR) &= ~FLAG_C;
                 
             if((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
@@ -151,7 +149,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
                 word out = arg1 - arg2;
                 set_n = (out & 0x80000000) ? SET : RESET;
                 set_z = (out == 0) ? SET : RESET;
-                set_c = (arg2 < arg1) ? SET : RESET;
+                set_c = (arg2 <= arg1) ? SET : RESET;
                 set_v = ((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) ? SET : RESET;
             }
             break;
