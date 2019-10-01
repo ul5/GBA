@@ -78,8 +78,21 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                     printf("Multiply (accumulate) long\n");
                 }
                 else {
-                    printf("Multiply (accumulate) %.08X\n", cpu->pc().data.reg32);
-                    exit(0);
+                    bool accumulate = instruction & (1 << 21);
+                    word op1 = cpu->reg(instruction & 0xF).data.reg32;
+                    word op2 = cpu->reg((instruction >> 8) & 0xF).data.reg32;
+                    word acc = cpu->reg((instruction >> 12) & 0xF).data.reg32;
+                    
+                    word result = op1 * op2;
+                    if(accumulate) result += acc;
+                    
+                    if(result == 0) cpu->reg(CPSR) |= FLAG_Z;
+                    else cpu->reg(CPSR) &= ~FLAG_Z;
+                    
+                    if(result & 0x80000000) cpu->reg(CPSR) |= FLAG_N;
+                    else cpu->reg(CPSR) &= ~FLAG_N;
+                    
+                    cpu->reg((instruction >> 16) & 0xF).data.reg32 = result;
                 }
             }
             else if ((instruction & 0x020000F0) == 0x000000B0) {

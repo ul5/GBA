@@ -1,14 +1,15 @@
 CXX=g++
 INCLUDE=-I "../Base/" -I"../libs/include/"
 OBJS=ARM/ARMDecompiler.o THUMB/THUMBDecompiler.o
+LIBS=-L$(shell pwd)/../bin -L"../libs/lib" -lBase -lSDL2 -lSDL2_ttf
 
 all: ../bin/libDecompiler.so
 
 ../bin/libDecompiler.so: $(OBJS)
-	$(CXX) -shared $(OBJS) -o ../bin/libDecompiler.so
+	$(CXX) -shared $(OBJS) -o ../bin/libDecompiler.so $(LIBS)
 	
 %.o: %.cpp
-	$(CXX) -c -fPIC $(INCLUDE) -o $*.o $<
+	$(CXX) -c -fPIC -std=c++11 $(INCLUDE) -o $*.o $<
 
 clean:
 	rm -rf $(OBJS)

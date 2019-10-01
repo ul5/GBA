@@ -24,7 +24,7 @@ Base::MMU::MMU() {
     
 	memory = new byte*[16];
 	memory[0x0] = bios;
-	memory[0x1] = nullptr;
+	memory[0x1] = null_page;
 	memory[0x2] = wram_1;
 	memory[0x3] = wram_2;
 	memory[0x4] = io;
@@ -42,7 +42,7 @@ Base::MMU::MMU() {
 	memory[0xE] = cart; // Actually cart_ram
 	
 	bit_masks[0] = 0x00FFFFFF + 1;
-	bit_masks[1] = 0x00FFFFFF + 1;
+	bit_masks[1] = 0x00000000 + 1;
 	bit_masks[2] = 0x0003FFFF + 1;
 	bit_masks[3] = 0x00007FFF + 1;
 	bit_masks[4] = 0x00FFFFFF + 1;

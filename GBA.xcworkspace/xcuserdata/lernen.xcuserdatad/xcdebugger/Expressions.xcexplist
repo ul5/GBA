@@ -3,6 +3,17 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "Base::MMU::r32(unsigned int):MMU.h">
+         <PersistentStrings>
+            <PersistentString
+               value = "(address &gt;&gt; 24) &amp; 0xF">
+            </PersistentString>
+            <PersistentString
+               value = "bit_masks[(address &gt;&gt; 24) &amp; 0xF]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Debugger::Debugger::printRegisters():Debugger.cpp">
          <PersistentStrings>
             <PersistentString

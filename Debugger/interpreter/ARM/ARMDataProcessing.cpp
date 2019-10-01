@@ -153,7 +153,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
                 set_v = ((out & 0x80000000) == (arg2 & 0x80000000) && (out & 0x80000000) != (arg1 & 0x80000000)) ? SET : RESET;
             }
             break;
-        case 0xB: // Compare with add
+        case 0xB: // Compare with add CMN
         {
             word out = arg1 + arg2;
             
@@ -178,7 +178,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
             set_z = (dest.data.reg32 == 0) ? SET : RESET;
             break;
-        case 0xF:
+        case 0xF: // MVN
             dest.data.reg32 = ~arg2;
             set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
             set_z = (dest.data.reg32 == 0) ? SET : RESET;

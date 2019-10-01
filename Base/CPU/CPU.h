@@ -20,6 +20,7 @@ namespace Base {
 		void reset();
 
 		inline void update_cycles(int num) { gpu->update_cycles(num); }
+        inline void update_gpu() { gpu->update(); }
         
         inline Register &pc() { return (*set)[PC]; }
         inline Register &reg(byte reg) { return (*set)[reg]; }

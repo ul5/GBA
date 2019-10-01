@@ -24,7 +24,7 @@ namespace Base {
         public:
             GPU(Base::MMU *mmu);
 
-            void start_gpu();
+            void update();
 
             inline void update_cycles(int num) { cycle_lock.lock(); cycles += num; cycle_lock.unlock(); }
     };

@@ -22,4 +22,6 @@ void Debugger::Interpreter::executeNextInstruction(bool disass) {
         if(disass) std::string out = Decompiler::decompileARM(ni, cpu);
         execute_arm(ni, cpu);
     }
+    
+    cpu->update_gpu();
 }

@@ -10,7 +10,7 @@ all: ../bin/gba
 	$(LD) -o ../bin/gba $(OBJS) $(LIBS)
 
 %.o: %.cpp
-	$(CXX) -c $(INCLUDE) -o $*.o $<
+	$(CXX) -c -std=c++11 $(INCLUDE) -o $*.o $<
 
 clean:
 	rm -rf $(OBJS)

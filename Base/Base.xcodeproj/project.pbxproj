@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130AFE0E2343D06100E09C59 /* GPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 130AFE0C2343D06100E09C59 /* GPU.cpp */; };
+		130AFE0F2343D06100E09C59 /* GPU.h in Headers */ = {isa = PBXBuildFile; fileRef = 130AFE0D2343D06100E09C59 /* GPU.h */; };
 		930683542307BB6400B711BB /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930683532307BB6400B711BB /* Register.cpp */; };
 		930683682307C01A00B711BB /* RegisterSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930683662307C01A00B711BB /* RegisterSet.cpp */; };
 		930683692307C01A00B711BB /* RegisterSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 930683672307C01A00B711BB /* RegisterSet.h */; };
@@ -19,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		130AFE0C2343D06100E09C59 /* GPU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GPU.cpp; sourceTree = "<group>"; };
+		130AFE0D2343D06100E09C59 /* GPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPU.h; sourceTree = "<group>"; };
 		9306830B2307BA1C00B711BB /* libBase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		930683502307BB3900B711BB /* GBABase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBABase.h; sourceTree = "<group>"; };
 		930683522307BB5A00B711BB /* Register.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Register.h; sourceTree = "<group>"; };
@@ -46,9 +50,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		130AFE0B2343D06100E09C59 /* GPU */ = {
+			isa = PBXGroup;
+			children = (
+				130AFE0C2343D06100E09C59 /* GPU.cpp */,
+				130AFE0D2343D06100E09C59 /* GPU.h */,
+			);
+			path = GPU;
+			sourceTree = "<group>";
+		};
 		930683022307BA1C00B711BB = {
 			isa = PBXGroup;
 			children = (
+				130AFE0B2343D06100E09C59 /* GPU */,
 				930683742307D36E00B711BB /* MMU */,
 				9306836B2307CBC700B711BB /* Register */,
 				9306836A2307CBBC00B711BB /* Base */,
@@ -114,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				930683782307D37700B711BB /* MMU.h in Headers */,
+				130AFE0F2343D06100E09C59 /* GPU.h in Headers */,
 				930683732307D29600B711BB /* CPU.h in Headers */,
 				930683692307C01A00B711BB /* RegisterSet.h in Headers */,
 				9306836F2307CC0200B711BB /* Logic.h in Headers */,
@@ -176,6 +191,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				130AFE0E2343D06100E09C59 /* GPU.cpp in Sources */,
 				930683722307D29600B711BB /* CPU.cpp in Sources */,
 				930683542307BB6400B711BB /* Register.cpp in Sources */,
 				930683682307C01A00B711BB /* RegisterSet.cpp in Sources */,
@@ -224,6 +240,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = /usr/local/Cellar/sdl2/2.0.10/lib;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -238,11 +255,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/sdl2/2.0.10/include/,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include/,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/sdl2/2.0.10/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /usr/local/Cellar/sdl2/2.0.10/include/;
 			};
 			name = Debug;
 		};
@@ -283,6 +306,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = /usr/local/Cellar/sdl2/2.0.10/lib;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -291,10 +315,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/sdl2/2.0.10/include/,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include/,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/sdl2/2.0.10/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /usr/local/Cellar/sdl2/2.0.10/include/;
 			};
 			name = Release;
 		};
@@ -305,6 +335,11 @@
 				DEVELOPMENT_TEAM = 9TPDPL7CQS;
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNUSED_FUNCTION = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/sdl2/2.0.10/include/,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include/,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -317,6 +352,11 @@
 				DEVELOPMENT_TEAM = 9TPDPL7CQS;
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNUSED_FUNCTION = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/sdl2/2.0.10/include/,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include/,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

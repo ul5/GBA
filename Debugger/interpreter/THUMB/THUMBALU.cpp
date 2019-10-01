@@ -64,17 +64,26 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
                 res = op1 - op2;
 
                 if(op2 <= op1) cpu->reg(CPSR) |= FLAG_C;
-                else cpu->reg(CPSR) &= ~FLAG_C;
+                else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
                 
                 if((res & 0x80000000) == (op2 & 0x80000000) && (res & 0x80000000) != (op1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
-                else cpu->reg(CPSR) &= ~FLAG_V;
+                else cpu->reg(CPSR).data.reg32 &= ~FLAG_V;
 
                 write = false;                
             }
             break;
         case 0xB:
-            printf("CMN ");
-            exit(0);
+        {
+            word out = op1 + op2;
+            
+            if(((uint64_t) op1 + (uint64_t) op2) > 0xFFFFFFFF) cpu->reg(CPSR) |= FLAG_C;
+            else cpu->reg(CPSR) &= ~FLAG_C;
+            
+            if((op1 & 0x80000000) == (op2 & 0x80000000) && (op1 & 0x80000000) != (out & 0x80000000)) cpu->reg(CPSR).data.reg32 |= FLAG_V;
+            else cpu->reg(CPSR).data.reg32 &= ~FLAG_V;
+            
+            write = false;
+        }
             break;
         case 0xC:
             {

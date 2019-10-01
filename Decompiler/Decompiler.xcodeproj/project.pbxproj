@@ -259,7 +259,12 @@
 				DEVELOPMENT_TEAM = 9TPDPL7CQS;
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNUSED_FUNCTION = NO;
-				HEADER_SEARCH_PATHS = $PROJECT_DIR/../Base;
+				HEADER_SEARCH_PATHS = (
+					$PROJECT_DIR/../Base,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include/,
+					/usr/local/Cellar/sdl2/2.0.10/include/,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -272,7 +277,12 @@
 				DEVELOPMENT_TEAM = 9TPDPL7CQS;
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNUSED_FUNCTION = NO;
-				HEADER_SEARCH_PATHS = $PROJECT_DIR/../Base;
+				HEADER_SEARCH_PATHS = (
+					$PROJECT_DIR/../Base,
+					/usr/local/Cellar/sdl2_ttf/2.0.15/include/,
+					/usr/local/Cellar/sdl2/2.0.10/include/,
+					/usr/local/Cellar/sdl2/2.0.10/include/SDL2,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
