@@ -173,13 +173,19 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
  				}
 			}
 			else if ((instruction & 0x020000F0) == 0x000000B0) {
-                disassembled = "#####################LDRH/STRH";
-				if (instruction & 0x00400000) {
-					//printf("hword data tranfer, immidiate offset");
-				}
-				else {
-					//printf("hword data tranfer, register offset");
-				}
+                uint32_t offset = 0;
+				if (instruction & 0x00400000) offset = (instruction & 0xF) | ((instruction & 0xF00) >> 4);
+				else offset = cpu->reg(instruction & 0xF).data.reg32;
+                uint8_t op = (instruction >> 4) & 0xF;
+
+
+                disassembled = instruction & (1 << 20) ? "LDR" : "STR";
+                disassembled += instruction & (op == 2) ? "SB" : op == 3 ? "SH" : "H";
+
+                disassembled += instruction & (1 << 21) ? "W" : "";
+                disassembled += std::string(" ") + reg_names[(instruction >> 12) & 0xF] + ", [" + reg_names[(instruction >> 16) & 0xF] + ", ";
+                disassembled += instruction & (1 << 23) ? "" : "-";
+                disassembled += int_to_hex(offset) + "]";
 			}
 			else if ((instruction & 0x020000D0) == 0x000000D0) {
                 disassembled = (instruction & 0x00100000) ? "LDRS" : "STRS";

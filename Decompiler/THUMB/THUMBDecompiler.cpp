@@ -153,7 +153,7 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
                 else disassembled = std::string("STR") + (instruction & 0x1000 ? "B" : "");
 
                 word off = (instruction >> 6) & 0x1F;
-                if(instruction & 0x1000) off <<= 2;
+                if(!(instruction & 0x1000)) off <<= 2;
 
                 disassembled = disassembled + " " + reg_names[(instruction & 0x7)] + ", [" + reg_names[(instruction >> 3) & 0x7] + ", #" + int_to_hex(off, 0) + "]";
             } else if(instruction & 0x0200) {

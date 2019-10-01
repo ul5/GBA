@@ -1,6 +1,6 @@
 CXX=g++
-INCLUDE=
-OBJS=Base/Logic.o CPU/CPU.o MMU/MMU.o Register/Register.o Register/RegisterSet.o
+INCLUDE=-I"../libs/include/"
+OBJS=Base/Logic.o CPU/CPU.o GPU/GPU.o MMU/MMU.o Register/Register.o Register/RegisterSet.o
 
 all: ../bin/libBase.so
 

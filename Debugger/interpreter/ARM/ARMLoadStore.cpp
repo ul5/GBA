@@ -47,3 +47,62 @@ void Debugger::arm_store(word instruction, Base::CPU *cpu) {
     if(instruction & (1 << 21) || !pre) cpu->reg((instruction >> 16) & 0xF).data.reg32 = total_address; // Writeback
 }
 
+void Debugger::arm_storeh(word instruction, Base::CPU *cpu) {
+    bool pre = instruction & 0x01000000;
+    bool up = instruction & 0x00800000;
+    bool writeback = (instruction & 0x00200000) || !pre;
+    bool sig = instruction & 0x40;
+    bool half = instruction & 0x20;
+
+    word offset = 0;
+
+    if (instruction & 0x00400000) offset = (instruction & 0xF) | (((instruction >> 8) & 0xF) << 4);
+    else offset = cpu->reg(instruction & 0xF).data.reg32;
+    if(!up) offset *= -1;
+
+    word address = cpu->reg((instruction >> 16) & 0xF).data.reg32;
+
+    if(pre) address += offset;
+
+    if(sig) {
+        printf("Why is the sign extend bit set in storing operation? Makes no sense...\n");
+    }
+
+    if(half) {
+        cpu->w16(address, cpu->reg((instruction >> 12) & 0xF).data.reg32 & 0xFFFF);
+    } else {
+        cpu->w8(address, cpu->reg((instruction >> 12) & 0xF).data.reg32 & 0xFF);
+    }
+
+    if(!pre || writeback) cpu->reg((instruction >> 16) & 0xF).data.reg32 += offset;
+}
+
+void Debugger::arm_loadh(word instruction, Base::CPU *cpu) {
+    bool pre = instruction & 0x01000000;
+    bool up = instruction & 0x00800000;
+    bool writeback = (instruction & 0x00200000) || !pre;
+    bool sig = instruction & 0x40;
+    bool half = instruction & 0x20;
+
+    word offset = 0;
+
+    if (instruction & 0x00400000) offset = (instruction & 0xF) | (((instruction >> 8) & 0xF) << 4);
+    else offset = cpu->reg(instruction & 0xF).data.reg32;
+    if(!up) offset *= -1;
+
+    word address = cpu->reg((instruction >> 16) & 0xF).data.reg32;
+
+    if(pre) address += offset;
+
+    if(half) {
+        word r = (word) cpu->r16(address);
+        if(sig && (r & 0x8000)) r |= 0xFFFF0000;
+        cpu->reg((instruction >> 12) & 0xF).data.reg32 = 0;
+    } else {
+        word r = (word) cpu->r8(address);
+        if(sig && (r & 0x80)) r |= 0xFFFFFF00;
+        cpu->reg((instruction >> 12) & 0xF).data.reg32 = r;
+    }
+
+    if(!pre || writeback) cpu->reg((instruction >> 16) & 0xF).data.reg32 += offset;
+}

@@ -31,15 +31,17 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
             else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
             break;
         case 0x4:
-            res = op1 >> op2;
+            res = (op1 >> op2) | (0xFFFFFFFF << (32 - op2));
             if((op1 >> (op2 - 1)) & 1) cpu->reg(CPSR).data.reg32 |= FLAG_C;
             else cpu->reg(CPSR).data.reg32 &= ~FLAG_C;
             break;
         case 0x5:
             printf("ADC ");
+            exit(0);
             break;
         case 0x6:
             printf("SBC ");
+            exit(0);
             break;
         case 0x7:
             res = (op1 >> op2) | (op1 << (32 - op2));
@@ -53,7 +55,9 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
             }
             break;
         case 0x9:
-            printf("NEG ");
+            res = -op2;
+            cpu->reg(CPSR).data.reg32 |= FLAG_C;
+            cpu->reg(CPSR).data.reg32 &= ~FLAG_V;
             break;
         case 0xA:
             {
@@ -70,6 +74,7 @@ void Debugger::thumb_alu(hword instruction, Base::CPU *cpu) {
             break;
         case 0xB:
             printf("CMN ");
+            exit(0);
             break;
         case 0xC:
             {

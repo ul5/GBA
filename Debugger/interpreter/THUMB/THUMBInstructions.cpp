@@ -1,6 +1,7 @@
 #include "THUMBInstructions.h"
 
 void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
+    cpu->update_cycles(1);
     if(instruction & 0x8000) {
         if(instruction & 0x4000) {
             if(instruction & 0x2000) {

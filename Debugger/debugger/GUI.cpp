@@ -90,7 +90,7 @@ void Debugger::GUI::start() {
             if(e.type == SDL_WINDOWEVENT) {
                 if(e.window.event == SDL_WINDOWEVENT_CLOSE) running = false;
             } else if(e.type == SDL_KEYDOWN) {
-                if(e.key.keysym.sym == SDLK_SPACE) mDebugger->executeNextInstruction(false);
+                if(e.key.keysym.sym == SDLK_SPACE) mDebugger->executeNextInstruction(true);
                 else if(e.key.keysym.sym == SDLK_ESCAPE) running = false;
                 else if(e.key.keysym.sym == SDLK_0) text += '0';
                 else if(e.key.keysym.sym == SDLK_1) text += '1';
@@ -108,7 +108,21 @@ void Debugger::GUI::start() {
                 else if(e.key.keysym.sym == SDLK_d) text += 'D';
                 else if(e.key.keysym.sym == SDLK_e) text += 'E';
                 else if(e.key.keysym.sym == SDLK_f) text += 'F';
-                else if(e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 3) text = text.substr(0, text.length() - 2);
+                else if(e.key.keysym.sym == SDLK_r) {
+                    uint32_t r = (uint32_t) strtol(text.substr(3, 1).c_str(), NULL, 16);
+                    printf("Register to write to: %.02X\n", r);
+                    uint32_t value = (uint32_t) strtol(text.substr(4).c_str(), NULL, 16);
+                    mDebugger->cpu->reg(r).data.reg32 = value;
+                    printf("Wrote value %.8X to register\n", value);
+                }
+                else if(e.key.keysym.sym == SDLK_m) {
+                    uint32_t r = (uint32_t) strtol(text.substr(3, 8).c_str(), NULL, 16);
+                    printf("Address to write to: %.08X\n", r);
+                    uint8_t value = (uint8_t) strtol(text.substr(11, 2).c_str(), NULL, 16);
+                    mDebugger->cpu->w8(r, value);
+                    printf("Wrote value %.08X to register\n", value);
+                }
+                else if(e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 2) text = text.substr(0, text.length() - 1);
                 else if(e.key.keysym.sym == SDLK_RETURN) {
                     running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
                     animated = true;

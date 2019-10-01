@@ -1,5 +1,5 @@
 CXX=g++
-INCLUDE=-I "../Base/"
+INCLUDE=-I "../Base/" -I"../libs/include/"
 OBJS=ARM/ARMDecompiler.o THUMB/THUMBDecompiler.o
 
 all: ../bin/libDecompiler.so

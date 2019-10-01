@@ -6,6 +6,8 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
         return;
     }
     
+    cpu->update_cycles(1);
+
     if (instruction & 0x08000000) {
         if (instruction & 0x04000000) {
             if ((instruction & 0x0F000000) == 0x0F000000) {
@@ -76,27 +78,14 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                     printf("Multiply (accumulate) long\n");
                 }
                 else {
-                    printf("Multiply (accumulate)\n");
+                    printf("Multiply (accumulate) %.08X\n", cpu->pc().data.reg32);
+                    exit(0);
                 }
             }
-            else if ((instruction & 0x020000F0) == 0x00000090) {
-                bool pre = instruction & 0x01000000;
-                bool up = instruction & 0x00800000;
-                bool writeback = (instruction & 0x00200000) || !pre;
+            else if ((instruction & 0x020000F0) == 0x000000B0) {
                 bool load = instruction & 0x0010000;
-                bool sig = instruction & 0x40;
-                bool half = instruction & 0x20;
-
-                word offset = 0;
-
-                if (instruction & 0x00400000) offset = (instruction & 0xF) | (((instruction >> 8) & 0xF) << 4);
-                else offset = cpu->reg(instruction & 0xF).data.reg32;
-                printf("Load / Store halfword");
-                if(half) {
-                    
-                } else {
-
-                }
+                if(load) arm_loadh(instruction, cpu);
+                else arm_storeh(instruction, cpu);
             }
             else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
                 word target_addr = cpu->reg(instruction & 0xF).data.reg32;

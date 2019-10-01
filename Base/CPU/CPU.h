@@ -2,6 +2,7 @@
 
 #include "../Register/RegisterSet.h"
 #include "../MMU/MMU.h"
+#include "../GPU/GPU.h"
 
 namespace Base {
 	
@@ -10,11 +11,15 @@ namespace Base {
         RegisterSet *set = nullptr;
         
         MMU *mmu = nullptr;
+		GPU *gpu = nullptr;
+		uint32_t cycle_count = 0;
 
 	public:
 		CPU();
 		
 		void reset();
+
+		inline void update_cycles(int num) { gpu->update_cycles(num); }
         
         inline Register &pc() { return (*set)[PC]; }
         inline Register &reg(byte reg) { return (*set)[reg]; }
