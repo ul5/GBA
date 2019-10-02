@@ -20,7 +20,26 @@ namespace Base {
 		void reset();
 
 		inline void update_cycles(int num) { gpu->update_cycles(num); }
-        inline void update_gpu() { gpu->update(); }
+
+        inline void update_gpu() { 
+			gpu->update();
+			bool interrupts_enabled = r8(0x04000008) & 1;
+			bool irq_enabled = reg(CPSR).data.reg32 & FLAG_I;
+			hword _if = r16(0x04000202);
+			hword _ie = r16(0x04000200);
+			hword interrupts = _if & _ie;
+
+			if(interrupts_enabled && interrupts && irq_enabled) {
+				printf("Interrupt occured...\n");
+				
+				set->setRegisterBank(MODE_IRQ);
+				(*set)[LR].data.reg32 = (*set)[PC].data.reg32; // Return address				
+				(*set)[PC].data.reg32 = 0x18;
+				(*set)[SPSR].data.reg32 = (*set)[CPSR].data.reg32; // Clear T bit
+				(*set)[CPSR].data.reg32 &= 0xFFFFFF40 | MODE_IRQ;
+				std::cin.get();
+			}
+		}
         
         inline Register &pc() { return (*set)[PC]; }
         inline Register &reg(byte reg) { return (*set)[reg]; }

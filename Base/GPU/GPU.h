@@ -3,9 +3,6 @@
 #include "../MMU/MMU.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <thread>
-#include <chrono>
-#include <mutex>
 
 namespace Base {
 
@@ -17,16 +14,14 @@ namespace Base {
             Base::MMU *mmu;
 
             int cycles = 0;
-            std::mutex cycle_lock;
-
-            std::thread gpu_thread;
+            int x_dot = 0, y_dot = 0;
         
         public:
             GPU(Base::MMU *mmu);
 
             void update();
 
-            inline void update_cycles(int num) { cycle_lock.lock(); cycles += num; cycle_lock.unlock(); }
+            inline void update_cycles(int num) { cycles += num; }
     };
 
 }

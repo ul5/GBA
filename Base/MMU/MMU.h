@@ -45,10 +45,6 @@ namespace Base {
         inline void w8(word address, byte val) {
             *(memory[(address >> 24) & 0xF] + (address % bit_masks[(address >> 24) & 0xF])) = val;
 
-			if(address >> 24 == 0x4) {
-				printf("Wrote to IO Control...: [%.08X] = 0x%.02X\n", address, val);
-			}
-
 #ifdef BREAK_ON_WRITE
 			if(address == BREAK_ON_WRITE) {
 				printf("Written value of %.08X to %.08X.\n", val, address);
@@ -60,10 +56,6 @@ namespace Base {
 		inline void w16(word address, hword val) { 
 			*(hword*)(memory[(address >> 24) & 0xF] + (address % bit_masks[(address >> 24) & 0xF])) = val;
 
-			if(address >> 24 == 0x4) {
-				printf("Wrote to IO Control...: [%.08X] = 0x%.04X\n", address, val);
-			}
-
 #ifdef BREAK_ON_WRITE
 			if(address == BREAK_ON_WRITE) {
 				printf("Written value of %.08X to %.08X.\n", val, address);
@@ -74,10 +66,6 @@ namespace Base {
 
         inline void w32(word address, word val) {
 			*(word*)(memory[(address >> 24) & 0xF] + (address % bit_masks[(address >> 24) & 0xF])) = val;
-
-			if(address >> 24 == 0x4) {
-				printf("Wrote to IO Control...: [%.08X] = 0x%.08X\n", address, val);
-			}			
 
 #ifdef BREAK_ON_WRITE
 			if(address == BREAK_ON_WRITE) {

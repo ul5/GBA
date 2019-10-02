@@ -19,15 +19,30 @@ void Base::GPU::update() {
         }
     }
     
-    if(cycles > 1232) {
-        dec_by += 1232;
-        mmu->w8(0x04000006, mmu->r8(0x04000006) + 1);
+
+    hword flags = 0;
+
+
+    while(cycles >= 4) {
+        cycles -= 4;
+        ++x_dot;
+        if(x_dot >= 240) flags |= 0x2;
+        if(x_dot >= 308) {
+            x_dot = 0;
+            ++y_dot;
+
+            if(y_dot >= 140) flags |= 0x1;
+            if(y_dot >= 228) {
+                y_dot = 0;
+            }
+        }
+
+        if(y_dot == mmu->r8(0x04000004)) flags |= 0x4;
+
+        mmu->w16(0x04000202, (mmu->r16(0x04000202) & 0xFFF8) | flags);
+        mmu->w16(0x04000004, (mmu->r16(0x04000004) & 0xFFF8) | flags);
+        mmu->w8(0x04000006, y_dot);
     }
 
-    cycle_lock.lock();
-    cycles -= dec_by;
-    cycle_lock.unlock();
-    dec_by = 0;
-    
     SDL_RenderPresent(renderer);
 }

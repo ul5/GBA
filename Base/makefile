@@ -1,5 +1,5 @@
 CXX=g++
-INCLUDE=-I"../libs" -I"../Base"
+INCLUDE=-I"../libs/include" -I"../Base"
 OBJS=Base/Logic.o CPU/CPU.o GPU/GPU.o MMU/MMU.o Register/Register.o Register/RegisterSet.o
 LIBS=-L$(shell pwd)/../bin -L"../libs/lib" -lSDL2 -lSDL2_ttf
 
