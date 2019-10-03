@@ -75,6 +75,8 @@ Debugger::GUI::GUI(Debugger *debugger) : mDebugger(debugger) {
     
     debugger_window = SDL_CreateWindow("Debugger", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 700, 750, 0);
     renderer = SDL_CreateRenderer(debugger_window, -1, SDL_RENDERER_ACCELERATED);
+
+    vram_gui = new VRAM_GUI(debugger->cpu);
 }
 
 void Debugger::GUI::start() {
@@ -137,12 +139,12 @@ void Debugger::GUI::start() {
                     animated = false;
                 } else if(e.key.keysym.sym == SDLK_l) {
                     disassembled = !disassembled;
-                }
+                } else if(e.key.keysym.sym == SDLK_LEFT) ++vram_gui->loffset;
             }
         }
         
         if(animated && mDebugger->cpu->pc().data.reg32 != running_until) {
-            for(int i = 0; i < 100 && animated; i++) {
+            for(int i = 0; i < 1000 && animated; i++) {
                 mDebugger->executeNextInstruction(disassembled);
                 if(disassembled) mDebugger->printRegisters();
                 if(mDebugger->cpu->pc().data.reg32 == running_until) animated = false;
@@ -152,6 +154,7 @@ void Debugger::GUI::start() {
             animated = false;
         }
         
+        vram_gui->render();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
         SDL_RenderClear(renderer);

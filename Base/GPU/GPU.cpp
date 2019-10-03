@@ -15,7 +15,7 @@ void Base::GPU::update() {
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
         if(e.type == SDL_WINDOWEVENT) {
-            if(e.window.event == SDL_WINDOWEVENT_CLOSE) return;
+            if(e.window.event == SDL_WINDOWEVENT_CLOSE) exit(0);
         }
     }
     
@@ -32,6 +32,7 @@ void Base::GPU::update() {
             ++y_dot;
 
             if(y_dot >= 140) flags |= 0x1;
+
             if(y_dot >= 228) {
                 y_dot = 0;
             }
@@ -39,8 +40,11 @@ void Base::GPU::update() {
 
         if(y_dot == mmu->r8(0x04000004)) flags |= 0x4;
 
-        mmu->w16(0x04000202, (mmu->r16(0x04000202) & 0xFFF8) | flags);
-        mmu->w16(0x04000004, (mmu->r16(0x04000004) & 0xFFF8) | flags);
+        if(y_dot == 0x9F && x_dot == 0) printf("Frame\n"); 
+
+        byte *io = mmu->memory[4];
+        io[0x202] |= flags;
+        io[4] |= flags;
         mmu->w8(0x04000006, y_dot);
     }
 

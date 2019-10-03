@@ -97,12 +97,12 @@ void Debugger::arm_loadh(word instruction, Base::CPU *cpu) {
     if(half) {
         word r = (word) cpu->r16(address);
         if(sig && (r & 0x8000)) r |= 0xFFFF0000;
-        cpu->reg((instruction >> 12) & 0xF).data.reg32 = 0;
+        cpu->reg((instruction >> 12) & 0xF).data.reg32 = r;
     } else {
         word r = (word) cpu->r8(address);
         if(sig && (r & 0x80)) r |= 0xFFFFFF00;
         cpu->reg((instruction >> 12) & 0xF).data.reg32 = r;
     }
 
-    if(!pre || writeback) cpu->reg((instruction >> 16) & 0xF).data.reg32 += offset;
+    if(writeback) cpu->reg((instruction >> 16) & 0xF).data.reg32 += offset;
 }

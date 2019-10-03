@@ -48,9 +48,17 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
                 if((result & 0x80000000) == (arg2 & 0x80000000) && (result & 0x80000000) != (arg1 & 0x80000000)) cpu->reg(CPSR) |= FLAG_V;
                 else cpu->reg(CPSR) &= ~FLAG_V;     
 
-                dest.data.reg32 = result;
-                set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
-                set_z = (dest.data.reg32 == 0) ? SET : RESET;           
+
+                if((instruction >> 12) & 0xF == 0xF && arg2 == 0x4) {
+                    dest.data.reg32 = result;
+                    cpu->reg(CPSR) = cpu->reg(SPSR);
+                    cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);
+                    return;
+                } else {
+                    dest.data.reg32 = result;
+                    set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
+                    set_z = (dest.data.reg32 == 0) ? SET : RESET;           
+                }
             }
             break;
         case 0x3: // RSB

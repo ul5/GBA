@@ -23,21 +23,22 @@ namespace Base {
 
         inline void update_gpu() { 
 			gpu->update();
-			bool interrupts_enabled = r8(0x04000008) & 1;
-			bool irq_enabled = reg(CPSR).data.reg32 & FLAG_I;
+			bool interrupts_enabled = r8(0x04000208) & 1;
+			bool irq_enabled = !((*set)[CPSR].data.reg32 & FLAG_I);
 			hword _if = r16(0x04000202);
 			hword _ie = r16(0x04000200);
 			hword interrupts = _if & _ie;
 
-			if(interrupts_enabled && interrupts && irq_enabled) {
-				printf("Interrupt occured...\n");
-				
+			if(interrupts_enabled && interrupts && irq_enabled) {			
+				word old_cpsr = (*set)[CPSR].data.reg32;
 				set->setRegisterBank(MODE_IRQ);
-				(*set)[LR].data.reg32 = (*set)[PC].data.reg32; // Return address				
+				(*set)[LR].data.reg32 = (*set)[PC].data.reg32 + 4; // Return address				
 				(*set)[PC].data.reg32 = 0x18;
-				(*set)[SPSR].data.reg32 = (*set)[CPSR].data.reg32; // Clear T bit
+				(*set)[SPSR].data.reg32 = old_cpsr; // Clear T bit
 				(*set)[CPSR].data.reg32 &= 0xFFFFFF40 | MODE_IRQ;
-				std::cin.get();
+				(*set)[CPSR].data.reg32 |= FLAG_I;
+
+				mmu->halted = false;
 			}
 		}
         

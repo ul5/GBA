@@ -95,8 +95,8 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                     cpu->reg((instruction >> 16) & 0xF).data.reg32 = result;
                 }
             }
-            else if ((instruction & 0x020000F0) == 0x000000B0) {
-                bool load = instruction & 0x0010000;
+            else if ((instruction & 0x020000B0) == 0x000000B0) {
+                bool load = instruction & 0x00100000;
                 if(load) arm_loadh(instruction, cpu);
                 else arm_storeh(instruction, cpu);
             }

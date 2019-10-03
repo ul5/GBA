@@ -172,7 +172,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
                     else disassembled = disassembled + reg_names[(instruction >> 16) & 0xF] + ", " + reg_names[(instruction & 0xF)] + ", " + reg_names[(instruction >> 8) & 0xF] + ", " + reg_names[(instruction >> 12) & 0xF];
  				}
 			}
-			else if ((instruction & 0x020000F0) == 0x000000B0) {
+			else if ((instruction & 0x020000F0) == 0x00000090) {
                 uint32_t offset = 0;
 				if (instruction & 0x00400000) offset = (instruction & 0xF) | ((instruction & 0xF00) >> 4);
 				else offset = cpu->reg(instruction & 0xF).data.reg32;
@@ -187,10 +187,24 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
                 disassembled += instruction & (1 << 23) ? "" : "-";
                 disassembled += int_to_hex(offset) + "]";
 			}
-			else if ((instruction & 0x020000D0) == 0x000000D0) {
+            else if ((instruction & 0x020000B0) == 0x000000B0) {
                 disassembled = (instruction & 0x00100000) ? "LDRS" : "STRS";
                 disassembled = disassembled + ((instruction & 0x00000020) ? "H" : "B");
                 //printf("(NYI)");
+
+                bool pre = instruction & 0x01000000;
+                bool up = instruction & 0x00800000;
+                bool writeback = (instruction & 0x00200000) || !pre;
+                bool sig = instruction & 0x40;
+                bool half = instruction & 0x20;
+
+                disassembled += std::string(" ") + reg_names[(instruction >> 12) & 0xF] + ", [" + reg_names[(instruction >> 16) & 0xF] + ", ";
+
+
+                if(!up) disassembled += "-";
+                if (instruction & 0x00400000) disassembled += int_to_hex((instruction & 0xF) | (((instruction >> 8) & 0xF) << 4));
+                else disassembled += reg_names[(instruction & 0xF)];
+                disassembled += "]";
 			}
 			else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
 				disassembled = std::string("BX ") + reg_names[instruction & 0xF];
