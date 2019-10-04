@@ -80,14 +80,15 @@ void Base::GPU::render(Base::CPU *cpu) {
 
     printf("Dispcnt: %.04X\n", dispcnt);
 
-    /**if(dispcnt & 0x0800) printf("BG 3 is on\n");
+    if(dispcnt & 0x0800) printf("BG 3 is on\n");
     if(dispcnt & 0x0400) printf("BG 2 is on\n");
     if(dispcnt & 0x0200) printf("BG 1 is on\n");
     if(dispcnt & 0x0100) printf("BG 0 is on\n");
 
-    if(dispcnt & 0x0F00) std::cin.get();*/
+    bool force_blank = (dispcnt & 0x80);
+    force_blank = false;
 
-    for(int index = 0; index < 128 && !(dispcnt & 0x80); index++) {
+    for(int index = 0; index < 128 && !force_blank; index++) {
         hword attrib0 = cpu->r16(0x07000000 + index * 8);
         hword attrib1 = cpu->r16(0x07000002 + index * 8);
         hword attrib2 = cpu->r16(0x07000004 + index * 8);

@@ -5,3 +5,5 @@ libs/**
 *.swp
 GBA/bios.gba
 GBA/emerald.gba
+GBA/pokemon.gba
+GBA/zelda.gba

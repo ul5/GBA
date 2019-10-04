@@ -17,7 +17,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
 				cpu->pc().data.reg32 = 0x8;
 				cpu->reg(SPSR).data.reg32 = old_cpsr; // Clear T bit
 				cpu->reg(CPSR).data.reg32 &= 0xFFFFFF40 | MODE_SUPERVISOR;
-                printf("Software interrupt (ARM) %.08X\n", instruction);
+                //printf("Software interrupt (ARM) %.08X\n", instruction);
             }
             else {
                 if (instruction & 0x02000000) {
