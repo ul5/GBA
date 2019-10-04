@@ -11,19 +11,29 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
     if (instruction & 0x08000000) {
         if (instruction & 0x04000000) {
             if ((instruction & 0x0F000000) == 0x0F000000) {
-                printf("SWI\n");
+                word old_cpsr = cpu->reg(CPSR).data.reg32;
+				cpu->set->setRegisterBank(MODE_SUPERVISOR);
+				cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 + 4; // Return address				
+				cpu->pc().data.reg32 = 0x18;
+				cpu->reg(SPSR).data.reg32 = old_cpsr; // Clear T bit
+				cpu->reg(CPSR).data.reg32 &= 0xFFFFFF40 | MODE_SUPERVISOR;
+                printf("Software interrupt %.08X\n", instruction);
             }
             else {
                 if (instruction & 0x02000000) {
                     if (instruction & 0x00000010) {
-                        printf("CoProcessor Register transfer\n");
+                        printf("CoProcessor Register transfer: %.08X\n", instruction);
+
+                        exit(0);
                     }
                     else {
-                        printf("CoProcessor Data operation\n");
+                        printf("CoProcessor Data operation: %.08X\n", instruction);
+                        exit(0);
                     }
                 }
                 else {
-                    printf("CoProcessor Data transfer\n");
+                    printf("CoProcessor Data transfer: %.08X\n", instruction);
+                    exit(0);
                 }
             }
         }
@@ -75,22 +85,67 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                     printf("Single Data Swap\n");
                 }
                 else if (instruction & 0x00800000) {
-                    printf("Multiply (accumulate) long\n");
+                    bool sign = instruction & (1 << 22);
+                    bool acc = instruction & (1 << 21);
+                    bool s = instruction & (1 << 20);
+
+                    if(sign) {
+                        int64_t old_values = ((uint64_t) cpu->reg((instruction >> 16) & 0xF).data.reg32 << 32) | (uint64_t) cpu->reg((instruction >> 12) & 0xF).data.reg32;
+
+                        word op1 = cpu->reg((instruction >> 8) & 0xF).data.reg32;
+                        word op2 = cpu->reg((instruction) & 0xF).data.reg32;
+                        int64_t result = (int64_t) op1 * (int64_t) op2;
+
+                        if(acc) result += old_values;
+
+                        cpu->reg((instruction >> 12) & 0xF).data.reg32 = result & 0xFFFFFFFF;
+                        cpu->reg((instruction >> 16) & 0xF).data.reg32 = (result >> 32);
+
+                        if(s) {
+                            if(result == 0) cpu->reg(CPSR) |= FLAG_Z;
+                            else cpu->reg(CPSR) &= ~FLAG_Z;
+                            
+                            if(result & 0x80000000) cpu->reg(CPSR) |= FLAG_N;
+                            else cpu->reg(CPSR) &= ~FLAG_N;
+                        }
+                    } else {
+                        uint64_t old_values = ((uint64_t) cpu->reg((instruction >> 16) & 0xF).data.reg32 << 32) | (uint64_t) cpu->reg((instruction >> 12) & 0xF).data.reg32;
+
+                        word op1 = cpu->reg((instruction >> 8) & 0xF).data.reg32;
+                        word op2 = cpu->reg((instruction) & 0xF).data.reg32;
+                        uint64_t result = (uint64_t) op1 * (uint64_t) op2;
+
+                        if(acc) result += old_values;
+
+                        cpu->reg((instruction >> 12) & 0xF).data.reg32 = result & 0xFFFFFFFF;
+                        cpu->reg((instruction >> 16) & 0xF).data.reg32 = (result >> 32);
+
+                        if(s) {
+                            if(result == 0) cpu->reg(CPSR) |= FLAG_Z;
+                            else cpu->reg(CPSR) &= ~FLAG_Z;
+                            
+                            if(result & 0x80000000) cpu->reg(CPSR) |= FLAG_N;
+                            else cpu->reg(CPSR) &= ~FLAG_N;
+                        }
+                    }
                 }
                 else {
                     bool accumulate = instruction & (1 << 21);
                     word op1 = cpu->reg(instruction & 0xF).data.reg32;
                     word op2 = cpu->reg((instruction >> 8) & 0xF).data.reg32;
                     word acc = cpu->reg((instruction >> 12) & 0xF).data.reg32;
+                    bool s = instruction & (1 << 20);
                     
                     word result = op1 * op2;
                     if(accumulate) result += acc;
                     
-                    if(result == 0) cpu->reg(CPSR) |= FLAG_Z;
-                    else cpu->reg(CPSR) &= ~FLAG_Z;
-                    
-                    if(result & 0x80000000) cpu->reg(CPSR) |= FLAG_N;
-                    else cpu->reg(CPSR) &= ~FLAG_N;
+                    if(s) {
+                        if(result == 0) cpu->reg(CPSR) |= FLAG_Z;
+                        else cpu->reg(CPSR) &= ~FLAG_Z;
+                        
+                        if(result & 0x80000000) cpu->reg(CPSR) |= FLAG_N;
+                        else cpu->reg(CPSR) &= ~FLAG_N;
+                    }
                     
                     cpu->reg((instruction >> 16) & 0xF).data.reg32 = result;
                 }

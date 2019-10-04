@@ -6,10 +6,10 @@ LIBS=-L$(shell pwd)/../bin -L"../libs/lib" -lSDL2 -lSDL2_ttf
 all: ../bin/libBase.so
 
 ../bin/libBase.so: $(OBJS)
-	$(CXX) -shared $(OBJS) -o ../bin/libBase.so $(LIBS)
+	$(CXX) -shared -O3 $(OBJS) -o ../bin/libBase.so $(LIBS)
 	
 %.o: %.cpp
-	$(CXX) -c -std=c++11 -fPIC $(INCLUDE) -o $*.o $<
+	$(CXX) -c -O3 -std=c++11 -fPIC $(INCLUDE) -o $*.o $<
 
 clean:
 	rm -rf $(OBJS)

@@ -162,10 +162,14 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
                     disassembled = disassembled + " " + reg_names[(instruction >> 12) & 0xF] + ", " + reg_names[(instruction >> 0) & 0xF] + ", [" + reg_names[(instruction >> 16) & 0xF] + "]";
 				}
 				else if (instruction & 0x00800000) {
-					//printf("Multiply (accumulate) long");
+					if(instruction & 0x00200000) disassembled = (instruction & 0x00400000) ? "SMLAL" : "UMLAL";
+                    else disassembled = (instruction & 0x00400000) ? "SMULL" : "UMULL";
+                    if(instruction & (1 << 20)) disassembled += "S ";
+                    disassembled += reg_names[(instruction >> 12) & 0xF] + std::string(", ") + reg_names[(instruction >> 16) & 0xF] + ", ";
+                    disassembled += reg_names[(instruction & 0xF)] + std::string(", ") + reg_names[(instruction >> 8) & 0xF];
 				}
 				else {
-                    if(instruction & 0x00200000) disassembled = (instruction & 0x00100000) ? "MLAS" : "MLA";
+                    if(instruction & 0x00200000) disassembled = (instruction & 0x00400000) ? "MLAS" : "MLA";
                     else disassembled = (instruction & 0x00100000) ? "MULS" : "MUL";
 
                     if(instruction & 0x00200000) disassembled = disassembled + reg_names[(instruction >> 16) & 0xF] + ", " + reg_names[(instruction & 0xF)] + ", " + reg_names[(instruction >> 8) & 0xF];

@@ -6,10 +6,10 @@ LIBS=-L$(shell pwd)/../bin -L"../libs/lib" -lDecompiler -lBase -lSDL2 -lSDL2_ttf
 all: ../bin/libDebugger.so
 
 ../bin/libDebugger.so: $(OBJS)
-	$(CXX) -shared $(OBJS) -o ../bin/libDebugger.so $(LIBS)
+	$(CXX) -shared -O3 $(OBJS) -o ../bin/libDebugger.so $(LIBS)
 	
 %.o: %.cpp
-	$(CXX) -c -fPIC -std=c++11 $(INCLUDE) -o $*.o $<
+	$(CXX) -c -O3 -fPIC -std=c++11 $(INCLUDE) -o $*.o $<
 
 clean:
 	rm -rf $(OBJS)

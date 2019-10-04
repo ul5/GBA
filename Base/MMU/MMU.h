@@ -59,6 +59,8 @@ namespace Base {
 				printf("DMA control 3 set!\n");
 			}*/
 
+			if(address == 0x04000200 || address == 0x04000201) printf("Wrote to IE register: %.04X\n", r16(0x04000200));
+
 			if(address == 0x04000202) {
 				memory[4][0x202] &= ~value;
 			}

@@ -7,10 +7,10 @@ OBJS=GBA/main.o
 all: ../bin/gba
 
 ../bin/gba: $(OBJS)
-	$(LD) -o ../bin/gba $(OBJS) $(LIBS)
+	$(LD) -O3 -o ../bin/gba $(OBJS) $(LIBS)
 
 %.o: %.cpp
-	$(CXX) -c -std=c++11 $(INCLUDE) -o $*.o $<
+	$(CXX) -c -O3 -std=c++11 $(INCLUDE) -o $*.o $<
 
 clean:
 	rm -rf $(OBJS)

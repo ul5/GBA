@@ -38,6 +38,8 @@ namespace Base {
 				(*set)[CPSR].data.reg32 &= 0xFFFFFF40 | MODE_IRQ;
 				(*set)[CPSR].data.reg32 |= FLAG_I;
 
+				printf("Interrupt occured: %.04X\n", interrupts);
+
 				mmu->halted = false;
 			}
 		}

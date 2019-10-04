@@ -130,7 +130,7 @@ void Debugger::GUI::start() {
                     uint32_t value = mDebugger->cpu->r32(r);
                     printf("Read value %.08X from memory\n", value);
                 }
-                else if(e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 2) text = text.substr(0, text.length() - 1);
+                else if(e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 3) text = text.substr(0, text.length() - 1);
                 else if(e.key.keysym.sym == SDLK_RETURN) {
                     running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
                     animated = true;
