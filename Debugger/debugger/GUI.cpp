@@ -156,6 +156,8 @@ void Debugger::GUI::start() {
         
         vram_gui->render();
 
+#define _RENDER_DEBUGGER
+#ifdef _RENDER_DEBUGGER
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
         SDL_RenderClear(renderer);
 
@@ -177,6 +179,7 @@ void Debugger::GUI::start() {
         renderText(text.c_str(), 0, 600);
         renderDecompiler();
         renderFlags();
+#endif
 
         SDL_RenderPresent(renderer);
     }

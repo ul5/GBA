@@ -14,7 +14,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
     
     if(imm) arg2 = Base::rotate(instruction & 0xFF, (instruction >> 8) & 0xF, cpu, s);
     else {
-        word reg = cpu->reg(instruction & 0xF).data.reg32 + ((instruction & 0xF) == 0xF ? 4 : 0);
+        word reg = cpu->reg(instruction & 0xF).data.reg32;
         arg2 = Base::shift((instruction >> 4) & 0xFF, reg, cpu, s);
     }
     

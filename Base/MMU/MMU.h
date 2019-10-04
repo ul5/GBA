@@ -71,6 +71,7 @@ namespace Base {
 		}
 
         inline void w8(word address, byte val) {
+			if(address == 0x04000410) return;
             *(memory[(address >> 24) & 0xF] + (address % bit_masks[(address >> 24) & 0xF])) = val;
 			check_stuff(address, val);
 #ifdef BREAK_ON_WRITE

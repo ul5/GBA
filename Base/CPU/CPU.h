@@ -43,6 +43,8 @@ namespace Base {
 				mmu->halted = false;
 			}
 		}
+
+		inline void render() { gpu->render(this); }
         
         inline Register &pc() { return (*set)[PC]; }
         inline Register &reg(byte reg) { return (*set)[reg]; }

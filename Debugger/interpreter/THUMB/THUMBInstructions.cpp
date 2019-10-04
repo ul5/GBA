@@ -27,7 +27,12 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
             } else {
                 if(instruction & 0x1000) {
                     if((instruction & 0x0F00) == 0x0F00) {
-                        //printf("Software interrupt");
+                        word old_cpsr = cpu->reg(CPSR).data.reg32;
+                        cpu->set->setRegisterBank(MODE_SUPERVISOR);
+                        cpu->reg(LR).data.reg32 = cpu->pc().data.reg32; // Return address				
+                        cpu->pc().data.reg32 = 0x8;
+                        cpu->reg(SPSR).data.reg32 = old_cpsr; // Clear T bit
+                        cpu->reg(CPSR).data.reg32 &= 0xFFFFFF40 | MODE_SUPERVISOR;
                     } else {
 						if(Base::isConditionMet((instruction >> 8) & 0xF, cpu->reg(CPSR).data.reg32)) {
 							word offset = (instruction & 0xFF) << 1;

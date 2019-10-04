@@ -74,7 +74,6 @@ std::string Decompiler::int_to_hex(word num, int str_len) {
 
 std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool print) {
 	if(print) printf("[DECOMPILER][%.08X] > %.08X ==> ", cpu->pc().data.reg32 - 4, instruction);
-
     // Condition = conditions[(instruction >> 28) & 0xF]
     std::string disassembled = "";
     

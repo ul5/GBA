@@ -13,11 +13,11 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
             if ((instruction & 0x0F000000) == 0x0F000000) {
                 word old_cpsr = cpu->reg(CPSR).data.reg32;
 				cpu->set->setRegisterBank(MODE_SUPERVISOR);
-				cpu->reg(LR).data.reg32 = cpu->pc().data.reg32 + 4; // Return address				
-				cpu->pc().data.reg32 = 0x18;
+				cpu->reg(LR).data.reg32 = cpu->pc().data.reg32; // Return address				
+				cpu->pc().data.reg32 = 0x8;
 				cpu->reg(SPSR).data.reg32 = old_cpsr; // Clear T bit
 				cpu->reg(CPSR).data.reg32 &= 0xFFFFFF40 | MODE_SUPERVISOR;
-                printf("Software interrupt %.08X\n", instruction);
+                printf("Software interrupt (ARM) %.08X\n", instruction);
             }
             else {
                 if (instruction & 0x02000000) {
@@ -73,6 +73,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
         if (instruction & 0x04000000) {
             if ((instruction & 0x02000010) == 0x02000010) {
                 printf("Undefined\n");
+                exit(0);
             }
             else {
                 if(instruction & (1 << 20)) arm_load(instruction, cpu);
@@ -83,6 +84,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
             if ((instruction & 0x020000F0) == 0x00000090) {
                 if (instruction & 0x01000000) {
                     printf("Single Data Swap\n");
+                    exit(0);
                 }
                 else if (instruction & 0x00800000) {
                     bool sign = instruction & (1 << 22);
@@ -164,12 +166,14 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                 }
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x003F0000 && (instruction & 0x00000FFF) == 0x00000FFF) {
                 printf("MRS\n");
+                exit(0);
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003FFFF0) == 0x0029F000) {
                 if(instruction & (1 << 22)) cpu->reg(SPSR).data.reg32 = cpu->reg(instruction & 0xF).data.reg32;
                 else cpu->reg(CPSR).data.reg32 = cpu->reg(instruction & 0xF).data.reg32;
                 cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);
             } else if((instruction & 0x0D800000) == 0x01000000 && (instruction & 0x003FF000) == 0x0028F000) {
                 printf("MSR PSR only\n");
+                exit(0);
             }
             else arm_data_processing(instruction, cpu);
         }

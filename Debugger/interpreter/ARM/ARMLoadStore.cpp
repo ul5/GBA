@@ -5,7 +5,7 @@ void Debugger::arm_load(word instruction, Base::CPU *cpu) {
     bool pre = (instruction & (1 << 24));
     if(((instruction >> 16) & 0xF) == 0xF) base_val += 4;
     word off;
-    if(instruction & (1 << 25)) off = Base::shift((instruction >> 8) & 0xFF, cpu->reg(instruction & 0xF).data.reg32 + ((instruction & 0xF) == 0xF ? 4 : 0), cpu, false);
+    if(instruction & (1 << 25)) off = Base::shift((instruction >> 4) & 0xFF, cpu->reg(instruction & 0xF).data.reg32, cpu, false);
     else off = instruction & 0xFFF;
     
     word total_address = base_val;
@@ -28,7 +28,7 @@ void Debugger::arm_store(word instruction, Base::CPU *cpu) {
     word base_val = cpu->reg((instruction >> 16) & 0xF).data.reg32;
     bool pre = (instruction & (1 << 24));
     word off;
-    if(instruction & (1 << 25)) off = Base::shift((instruction >> 8) & 0xFF, cpu->reg(instruction & 0xF).data.reg32 + ((instruction & 0xF) == 0xF ? 4 : 0), cpu, false);
+    if(instruction & (1 << 25)) off = Base::shift((instruction >> 4) & 0xFF, cpu->reg(instruction & 0xF).data.reg32, cpu, false);
     else off = instruction & 0xFFF;
 
     word total_address = base_val;
