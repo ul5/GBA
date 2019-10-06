@@ -16,6 +16,8 @@ int main(int argc, const char **args) {
             interpreter->cpu->render();
         }
     }
+    
+    interpreter->printTrace();
         
     Debugger::GUI a(interpreter);
     a.start();

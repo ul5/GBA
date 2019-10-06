@@ -15,6 +15,7 @@ void Debugger::GUI::renderDecompiler() {
     renderText("> ", 0, 300);
     for(int i = -2; i <= 10; i++) {
         word addr = i * ((mDebugger->cpu->reg(CPSR).data.reg32 & FLAG_T) ? 2 : 4);
+        if(addr >= 0xF000000) continue;
         std::string dis = Decompiler::decompileInstruction(mDebugger->cpu, addr, false);
 
         std::string to_render = Decompiler::int_to_hex(mDebugger->cpu->pc().data.reg32 + addr);
