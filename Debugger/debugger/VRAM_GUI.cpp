@@ -126,8 +126,8 @@ void Debugger::VRAM_GUI::render() {
 #endif
 
     // printf("Display Control register: %.04X\n", dispcnt);
-    if(dispcnt & 0x7 == 0) {
-    } else if(dispcnt & 0x7 == 2) {
+    if((dispcnt & 0x7) == 0) {
+    } else if((dispcnt & 0x7) == 2) {
         //printf("Display Control register: %.04X\n", dispcnt);
     }
 

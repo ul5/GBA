@@ -33,6 +33,7 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                         cpu->pc().data.reg32 = 0x8;
                         cpu->reg(SPSR).data.reg32 = old_cpsr; // Clear T bit
                         cpu->reg(CPSR).data.reg32 &= 0xFFFFFF40 | MODE_SUPERVISOR;
+                        cpu->reg(CPSR).data.reg32 |= FLAG_I;
                     } else {
 						if(Base::isConditionMet((instruction >> 8) & 0xF, cpu->reg(CPSR).data.reg32)) {
 							word offset = (instruction & 0xFF) << 1;

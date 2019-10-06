@@ -49,7 +49,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
                 else cpu->reg(CPSR) &= ~FLAG_V;     
 
 
-                if((instruction >> 12) & 0xF == 0xF && arg2 == 0x4) {
+                if(((instruction >> 12) & 0xF) == 0xF && arg2 <= 0x4) {
                     dest.data.reg32 = result;
                     cpu->reg(CPSR) = cpu->reg(SPSR);
                     cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);

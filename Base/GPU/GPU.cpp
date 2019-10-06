@@ -123,6 +123,9 @@ void Base::GPU::render(Base::CPU *cpu) {
                 w = 8 * (1 << (size > 0 ? size - 1 : 0));
                 h = 16 * (1 << size);
                 break;
+            default:
+                printf("What should this be (GPU -> Obj with size 3)\n");
+                exit(0);
         }
 
         int pt_size = double_size ? 2 : 1;

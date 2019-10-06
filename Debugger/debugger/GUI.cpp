@@ -155,6 +155,7 @@ void Debugger::GUI::start() {
         }
         
         vram_gui->render();
+        mDebugger->cpu->render();
 
 #define _RENDER_DEBUGGER
 #ifdef _RENDER_DEBUGGER

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13161C83231EDB9F00797D47 /* THUMBALU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13161C82231EDB9F00797D47 /* THUMBALU.cpp */; };
+		131AAB542348DF6A00D019BD /* VRAM_GUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 131AAB522348DF6A00D019BD /* VRAM_GUI.h */; };
+		131AAB552348DF6A00D019BD /* VRAM_GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 131AAB532348DF6A00D019BD /* VRAM_GUI.cpp */; };
 		132FD954230C623B000FB796 /* ARMInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 132FD952230C623B000FB796 /* ARMInstructions.cpp */; };
 		132FD955230C623B000FB796 /* ARMInstructions.h in Headers */ = {isa = PBXBuildFile; fileRef = 132FD953230C623B000FB796 /* ARMInstructions.h */; };
 		132FD957230C626B000FB796 /* ARMBranch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 132FD956230C626B000FB796 /* ARMBranch.cpp */; };
@@ -28,6 +30,8 @@
 
 /* Begin PBXFileReference section */
 		13161C82231EDB9F00797D47 /* THUMBALU.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = THUMBALU.cpp; sourceTree = "<group>"; };
+		131AAB522348DF6A00D019BD /* VRAM_GUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRAM_GUI.h; sourceTree = "<group>"; };
+		131AAB532348DF6A00D019BD /* VRAM_GUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VRAM_GUI.cpp; sourceTree = "<group>"; };
 		132FD952230C623B000FB796 /* ARMInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARMInstructions.cpp; sourceTree = "<group>"; };
 		132FD953230C623B000FB796 /* ARMInstructions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARMInstructions.h; sourceTree = "<group>"; };
 		132FD956230C626B000FB796 /* ARMBranch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARMBranch.cpp; sourceTree = "<group>"; };
@@ -122,6 +126,8 @@
 		930683612307BD2900B711BB /* debugger */ = {
 			isa = PBXGroup;
 			children = (
+				131AAB532348DF6A00D019BD /* VRAM_GUI.cpp */,
+				131AAB522348DF6A00D019BD /* VRAM_GUI.h */,
 				13364F622326D56E009D19A3 /* CLI.cpp */,
 				13364F612326D56E009D19A3 /* CLI.h */,
 				930683622307BD3800B711BB /* Debugger.cpp */,
@@ -140,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13364F682326DF2B009D19A3 /* GUI.h in Headers */,
+				131AAB542348DF6A00D019BD /* VRAM_GUI.h in Headers */,
 				13466AA32315B53E0056B284 /* THUMBInstructions.h in Headers */,
 				930683602307BD0400B711BB /* Interpreter.h in Headers */,
 				930683652307BD3800B711BB /* Debugger.h in Headers */,
@@ -207,6 +214,7 @@
 				13466AA22315B53E0056B284 /* THUMBInstructions.cpp in Sources */,
 				13161C83231EDB9F00797D47 /* THUMBALU.cpp in Sources */,
 				13364F672326DF2B009D19A3 /* GUI.cpp in Sources */,
+				131AAB552348DF6A00D019BD /* VRAM_GUI.cpp in Sources */,
 				13364F642326D56E009D19A3 /* CLI.cpp in Sources */,
 				132FD95B230DDBCC000FB796 /* ARMLoadStore.cpp in Sources */,
 				132FD957230C626B000FB796 /* ARMBranch.cpp in Sources */,

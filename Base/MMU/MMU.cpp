@@ -2,7 +2,7 @@
 
 Base::MMU::MMU() {
 	bios = Base::readFile("bios.gba").data; //(byte*) malloc(0x4000);
-	filedata cartridge_full = Base::readFile("zelda.gba");
+	filedata cartridge_full = Base::readFile("emerald.gba");
     cart = cartridge_full.data;
     
 	wram_1 = (byte*) malloc(0x40000);

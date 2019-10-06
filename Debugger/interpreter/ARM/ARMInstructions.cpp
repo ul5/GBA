@@ -17,6 +17,7 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
 				cpu->pc().data.reg32 = 0x8;
 				cpu->reg(SPSR).data.reg32 = old_cpsr; // Clear T bit
 				cpu->reg(CPSR).data.reg32 &= 0xFFFFFF40 | MODE_SUPERVISOR;
+                cpu->reg(CPSR).data.reg32 |= FLAG_I;
                 //printf("Software interrupt (ARM) %.08X\n", instruction);
             }
             else {
@@ -164,13 +165,14 @@ void Debugger::execute_arm(word instruction, Base::CPU *cpu) {
                 if(target_addr & 1) {
                     cpu->reg(CPSR) |= FLAG_T;
                 }
-            } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x003F0000 && (instruction & 0x00000FFF) == 0x00000FFF) {
-                printf("MRS\n");
-                exit(0);
+            } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x000F0000 && (instruction & 0x00000FFF) == 0x00000000) {
+                cpu->reg((instruction >> 12) & 0xF).data.reg32 = cpu->reg(instruction & (1 << 22) ? SPSR : CPSR).data.reg32;
             } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003FFFF0) == 0x0029F000) {
                 if(instruction & (1 << 22)) cpu->reg(SPSR).data.reg32 = cpu->reg(instruction & 0xF).data.reg32;
-                else cpu->reg(CPSR).data.reg32 = cpu->reg(instruction & 0xF).data.reg32;
-                cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);
+                else {
+                    cpu->reg(CPSR).data.reg32 = cpu->reg(instruction & 0xF).data.reg32;
+                    cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);
+                }
             } else if((instruction & 0x0D800000) == 0x01000000 && (instruction & 0x003FF000) == 0x0028F000) {
                 printf("MSR PSR only\n");
                 exit(0);
