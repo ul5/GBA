@@ -16,5 +16,6 @@ namespace Debugger {
         int loffset = 0;
         VRAM_GUI(Base::CPU *_cpu);
         void render();
+        void render_background(byte bg);
     };
 }

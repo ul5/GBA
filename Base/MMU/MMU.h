@@ -68,6 +68,8 @@ namespace Base {
 			if(address == 0x04000301) {
 				halted = true;
 			} 
+
+			if(address >= 0x10000000) printf("Illegal address written to at: %.08X\n", i);
 		}
 
         inline void w8(word address, byte val) {
