@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		130AFE0E2343D06100E09C59 /* GPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 130AFE0C2343D06100E09C59 /* GPU.cpp */; };
 		130AFE0F2343D06100E09C59 /* GPU.h in Headers */ = {isa = PBXBuildFile; fileRef = 130AFE0D2343D06100E09C59 /* GPU.h */; };
+		131AAB5B234E771400D019BD /* Timers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 131AAB59234E771400D019BD /* Timers.cpp */; };
+		131AAB5C234E771400D019BD /* Timers.h in Headers */ = {isa = PBXBuildFile; fileRef = 131AAB5A234E771400D019BD /* Timers.h */; };
 		930683542307BB6400B711BB /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930683532307BB6400B711BB /* Register.cpp */; };
 		930683682307C01A00B711BB /* RegisterSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930683662307C01A00B711BB /* RegisterSet.cpp */; };
 		930683692307C01A00B711BB /* RegisterSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 930683672307C01A00B711BB /* RegisterSet.h */; };
@@ -23,6 +25,8 @@
 /* Begin PBXFileReference section */
 		130AFE0C2343D06100E09C59 /* GPU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GPU.cpp; sourceTree = "<group>"; };
 		130AFE0D2343D06100E09C59 /* GPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPU.h; sourceTree = "<group>"; };
+		131AAB59234E771400D019BD /* Timers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Timers.cpp; sourceTree = "<group>"; };
+		131AAB5A234E771400D019BD /* Timers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timers.h; sourceTree = "<group>"; };
 		9306830B2307BA1C00B711BB /* libBase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		930683502307BB3900B711BB /* GBABase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBABase.h; sourceTree = "<group>"; };
 		930683522307BB5A00B711BB /* Register.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Register.h; sourceTree = "<group>"; };
@@ -59,9 +63,19 @@
 			path = GPU;
 			sourceTree = "<group>";
 		};
+		131AAB58234E770500D019BD /* Timers */ = {
+			isa = PBXGroup;
+			children = (
+				131AAB59234E771400D019BD /* Timers.cpp */,
+				131AAB5A234E771400D019BD /* Timers.h */,
+			);
+			path = Timers;
+			sourceTree = "<group>";
+		};
 		930683022307BA1C00B711BB = {
 			isa = PBXGroup;
 			children = (
+				131AAB58234E770500D019BD /* Timers */,
 				130AFE0B2343D06100E09C59 /* GPU */,
 				930683742307D36E00B711BB /* MMU */,
 				9306836B2307CBC700B711BB /* Register */,
@@ -131,6 +145,7 @@
 				130AFE0F2343D06100E09C59 /* GPU.h in Headers */,
 				930683732307D29600B711BB /* CPU.h in Headers */,
 				930683692307C01A00B711BB /* RegisterSet.h in Headers */,
+				131AAB5C234E771400D019BD /* Timers.h in Headers */,
 				9306836F2307CC0200B711BB /* Logic.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -194,6 +209,7 @@
 				130AFE0E2343D06100E09C59 /* GPU.cpp in Sources */,
 				930683722307D29600B711BB /* CPU.cpp in Sources */,
 				930683542307BB6400B711BB /* Register.cpp in Sources */,
+				131AAB5B234E771400D019BD /* Timers.cpp in Sources */,
 				930683682307C01A00B711BB /* RegisterSet.cpp in Sources */,
 				930683772307D37700B711BB /* MMU.cpp in Sources */,
 				9306836E2307CC0200B711BB /* Logic.cpp in Sources */,

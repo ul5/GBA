@@ -1,9 +1,12 @@
 #include "GUI.h"
 
 void Debugger::GUI::renderText(const char *text, int x, int y, int col) {
+    if(!text) return;
 	SDL_Surface *text_surface = TTF_RenderText_Shaded(font, text, {(uint8_t) ((col >> 16) & 0xFF), (uint8_t) ((col >> 8) & 0xFF), (uint8_t) ((col >> 0) & 0xFF), (uint8_t) ((col >> 24) & 0xFF) }, {0, 0, 0, 0});
 	SDL_Texture *text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
 
+    if(!text_surface) return;
+    
 	SDL_Rect dst = {x, y, text_surface->w, text_surface->h};
 
 	SDL_RenderCopy(renderer, text_texture, nullptr, &dst);
@@ -136,6 +139,8 @@ void Debugger::GUI::start() {
                     running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
                     animated = true;
                     //text = "== ";
+                } else if(e.key.keysym.sym == SDLK_t) {
+                    mDebugger->printTrace();
                 } else if(e.key.keysym.sym == SDLK_s) {
                     animated = false;
                 } else if(e.key.keysym.sym == SDLK_l) {

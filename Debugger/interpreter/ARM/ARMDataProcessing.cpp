@@ -50,6 +50,7 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
 
 
                 if(((instruction >> 12) & 0xF) == 0xF && arg2 <= 0x4) {
+                    // printf("Returning from address %.08X (CPSR: %.08X, SPSR: %.08X)\n", cpu->pc().data.reg32, cpu->reg(CPSR).data.reg32, cpu->reg(SPSR).data.reg32);
                     dest.data.reg32 = result;
                     cpu->reg(CPSR) = cpu->reg(SPSR);
                     cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);
@@ -180,6 +181,13 @@ void Debugger::arm_data_processing(word instruction, Base::CPU *cpu) {
             dest.data.reg32 = arg2;
             set_n = (dest.data.reg32 & 0x80000000) ? SET : RESET;
             set_z = (dest.data.reg32 == 0) ? SET : RESET;
+            
+            if(((instruction >> 12) & 0xF) == 0xF && (instruction & 0xFFF) == 0xE) {
+                // Also restore the CPSR, as we probably returned from SWI...
+                dest.data.reg32 &= 0xFFFFFFFE;
+                cpu->reg(CPSR) = cpu->reg(SPSR);
+                cpu->set->setRegisterBank(cpu->reg(CPSR).data.reg32 & 0x1F);
+            }
             break;
         case 0xE:
             dest.data.reg32 = arg1 & ~arg2;

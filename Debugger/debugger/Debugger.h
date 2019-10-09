@@ -15,8 +15,8 @@ namespace Debugger {
         Base::CPU *cpu = nullptr;
         
         word fetchNextInstruction();
-	virtual void executeNextInstruction(bool disass = true) = 0;
-		
+        virtual void executeNextInstruction(bool disass = true) = 0;
+        virtual void printTrace() = 0;
         void printRegisters();
 	};
 	

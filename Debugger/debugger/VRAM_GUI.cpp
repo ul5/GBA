@@ -66,8 +66,6 @@ void Debugger::VRAM_GUI::render() {
     SDL_SetRenderDrawColor(renderer, (color & 0x1F) << 3, ((color >> 5) & 0x1F) << 3, ((color >> 10) & 0x1F) << 3, 0xFF);
     SDL_RenderClear(renderer);
 
-    byte *vram_data = cpu->mmu->memory[6];
-
     // printf("Color depth: %s\n", color_depth ? "8 bit" : "4 bit");
 
     // for(int i = 0; i < 4; i++) render_background(i);

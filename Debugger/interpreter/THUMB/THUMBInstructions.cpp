@@ -149,7 +149,11 @@ void Debugger::execute_thumb(hword instruction, Base::CPU *cpu) {
                     }
 						break;
 					case 2:
-                        cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32 = a2;
+                        if(((instruction & 0x7) | ((instruction >> 4) & 0x8)) == 0xF) {
+                            cpu->pc().data.reg32 = a2 & 0xFFFFFFFE;
+                        } else {
+                            cpu->reg((instruction & 0x7) | ((instruction >> 4) & 0x8)).data.reg32 = a2;
+                        }
 						break;
 					case 3: // BX
 					{

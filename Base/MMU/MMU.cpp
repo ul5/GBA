@@ -1,4 +1,5 @@
 #include "MMU.h"
+#include "../Timers/Timers.h"
 
 Base::MMU::MMU() {
 	bios = Base::readFile("bios.gba").data; //(byte*) malloc(0x4000);
@@ -36,7 +37,7 @@ Base::MMU::MMU() {
 	for(int i = 0; i < 6; i++) {
 		memory[0x8 + i] = cartridge_full.size >= 0x1000000 * i ? cart + 0x1000000 * i : null_page;
 		word size = cartridge_full.size - 0x1000000 * i;
-		bit_masks[0x8 + i] = cartridge_full.size >= 0x1000000 * i ? (size > 0x1000000 ? 0xFFFFFF : size) : 0; 
+		bit_masks[0x8 + i] = cartridge_full.size >= 0x1000000 * i ? (size >= 0x1000000 ? 0x1000000 : size) : 1; 
 	}
 
 	memory[0xE] = cart; // Actually cart_ram
@@ -83,4 +84,46 @@ Base::MMU::MMU(MMU &mmu) {
 	memcpy(palette, mmu.palette, 0x400);
 	memcpy(vram, mmu.vram, 0x18000);
 	memcpy(oam, mmu.oam, 0x400);
+}
+
+void Base::MMU::check_stuff(word address, word value) {
+    if(address == 0x040000BB && (value & 0x80)) {
+        printf("DMA control 0 set!\n");
+    }
+    if(address == 0x040000C7 && (value & 0x80)) {
+        printf("DMA control 1 set! : %.04X\n", r16(0x040000C6));
+        printf("\tCopying from: %.08X\n\tCopying to    %.08X\n\tCopy amount:  %.04X\n", r32(0x040000BC), r32(0x040000C0), r16(0x040000C4));
+    }
+    if(address == 0x040000D3 && (value & 0x80)) {
+        printf("DMA control 2 set!\n");
+    }
+    if(address == 0x040000DF && (value & 0x80)) {
+        printf("DMA control 3 set!\n");
+        printf("\tCopying from: %.08X\n\tCopying to    %.08X\n\tCopy amount:  %.04X\n", r32(0x040000D4), r32(0x040000D8), r16(0x040000DC));
+        
+        bool bit_32 = value & 0x04;
+        
+        word start_addr = r32(0x040000D4);
+        word cpy_addr = r32(0x040000D8);
+        for(int addr_off = 0; addr_off < r16(0x040000DC); addr_off += bit_32 ? 4 : 2) {
+            if(bit_32) w32(cpy_addr + addr_off, r32(start_addr + addr_off));
+            else w16(cpy_addr + addr_off, r16(start_addr + addr_off));
+        }
+    }
+    
+    // if(address == 0x04000200 || address == 0x04000201) printf("Wrote to IE register: %.04X\n", r16(0x04000200));
+    
+    if(address == 0x04000202) {
+        memory[4][0x202] &= ~value;
+    }
+    
+    if(address == 0x04000301) {
+        halted = true;
+    }
+    
+    if(address == 0x0400010C) {
+        timers->t3_reload = value;
+    }
+    
+    if(address >= 0x10000000) printf("Illegal address written to at: %.08X\n", i);
 }

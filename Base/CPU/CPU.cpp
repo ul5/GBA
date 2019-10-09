@@ -3,6 +3,8 @@
 Base::CPU::CPU() {
 	set = new Base::RegisterSet();
 	mmu = new Base::MMU();
+    timers = new Base::Timers(mmu);
+    mmu->timers = timers;
 	gpu = new Base::GPU(mmu);
 		
 	reset();

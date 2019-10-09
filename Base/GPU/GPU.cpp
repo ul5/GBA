@@ -78,7 +78,7 @@ void Base::GPU::render(Base::CPU *cpu) {
         }
     }
 
-    printf("Dispcnt: %.04X\n", dispcnt);
+    // printf("Dispcnt: %.04X\n", dispcnt);
 
     if(dispcnt & 0x0800) printf("BG 3 is on\n");
     if(dispcnt & 0x0400) printf("BG 2 is on\n");

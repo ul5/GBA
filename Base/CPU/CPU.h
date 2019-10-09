@@ -2,6 +2,7 @@
 
 #include "../Register/RegisterSet.h"
 #include "../MMU/MMU.h"
+#include "../Timers/Timers.h"
 #include "../GPU/GPU.h"
 
 namespace Base {
@@ -11,6 +12,7 @@ namespace Base {
         RegisterSet *set = nullptr;
         
         MMU *mmu = nullptr;
+        Timers *timers = nullptr;
 		GPU *gpu = nullptr;
 		uint32_t cycle_count = 0;
 
@@ -19,10 +21,12 @@ namespace Base {
 		
 		void reset();
 
-		inline void update_cycles(int num) { gpu->update_cycles(num); }
+        inline void update_cycles(int num) { timers->add_cycles(num); gpu->update_cycles(num); }
 
         inline void update_gpu() { 
 			gpu->update();
+            timers->update();
+            
 			bool interrupts_enabled = r8(0x04000208) & 1;
 			bool irq_enabled = !((*set)[CPSR].data.reg32 & FLAG_I);
 			hword _if = r16(0x04000202);

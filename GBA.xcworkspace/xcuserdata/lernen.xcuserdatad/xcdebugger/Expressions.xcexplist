@@ -14,18 +14,29 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "Debugger::Debugger::printRegisters():Debugger.cpp">
+         contextName = "Debugger::Interpreter::executeNextInstruction(bool):Interpreter.cpp">
          <PersistentStrings>
             <PersistentString
-               value = "Decompiler::reg_names[15]">
+               value = "this-&gt;instruction_trace">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Decompiler::decompileInstruction(Base::CPU*, unsigned int, bool):GBADecompiler.h">
       </ContextState>
       <ContextState
          contextName = "Base::MMU::r8(unsigned int):MMU.h">
          <PersistentStrings>
             <PersistentString
                value = "address &amp; 0xFFFFFF">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Debugger::Debugger::printRegisters():Debugger.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "Decompiler::reg_names[15]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

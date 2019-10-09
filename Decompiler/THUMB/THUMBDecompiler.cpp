@@ -54,7 +54,7 @@ std::string Decompiler::decompileTHUMB(hword instruction, Base::CPU *cpu, bool p
                     } else {
                         word offset = (instruction & 0x7F) << 2;
                         if(instruction & 0x0080) disassembled = std::string("SUB SP, ") + int_to_hex(offset, 3);
-                        else std::string("ADD SP, ") + int_to_hex(offset, 3);
+                        else disassembled = std::string("ADD SP, ") + int_to_hex(offset, 3);
                     }
                 } else {
                     disassembled = std::string("ADR ") + reg_names[(instruction >> 8) & 0x7] + ", " + (instruction & 0x0800 ? "SP" : "PC") + ", " + int_to_hex((instruction & 0xFF) << 2);
