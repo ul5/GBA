@@ -9,7 +9,7 @@ int main(int argc, const char **args) {
 
     interpreter->executeNextInstruction(false);
     int counter = 0; // 0x082E062D
-    while(interpreter->pc().data.reg32 != 0x64 && interpreter->pc().data.reg32 >> 24 != 3 && (interpreter->pc().data.reg32 & 1) == 0) {
+    while(interpreter->pc().data.reg32 != 0x64 && interpreter->cpu->r32(interpreter->pc().data.reg32) != 0 && (interpreter->pc().data.reg32 & 1) == 0) {
         interpreter->executeNextInstruction(false);
         if(++counter >= 280896) {
             counter = 0;
