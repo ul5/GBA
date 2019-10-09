@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		131AAB57234A580800D019BD /* zelda.gba in CopyFiles */ = {isa = PBXBuildFile; fileRef = 131AAB56234A580000D019BD /* zelda.gba */; };
 		133849F0231287CB009563D3 /* emerald.gba in CopyFiles */ = {isa = PBXBuildFile; fileRef = 133849EF231287C4009563D3 /* emerald.gba */; };
 		1374B6522326E634006193B8 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1374B6512326E634006193B8 /* libSDL2.a */; };
 		1374B6542326E8BF006193B8 /* Raleway-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1374B6532326E8B8006193B8 /* Raleway-Regular.ttf */; };
@@ -26,6 +27,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				1374B6542326E8BF006193B8 /* Raleway-Regular.ttf in CopyFiles */,
+				131AAB57234A580800D019BD /* zelda.gba in CopyFiles */,
 				9306837C2307D83600B711BB /* bios.gba in CopyFiles */,
 				133849F0231287CB009563D3 /* emerald.gba in CopyFiles */,
 			);
@@ -34,6 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		131AAB56234A580000D019BD /* zelda.gba */ = {isa = PBXFileReference; lastKnownFileType = file; path = zelda.gba; sourceTree = "<group>"; };
 		133849EF231287C4009563D3 /* emerald.gba */ = {isa = PBXFileReference; lastKnownFileType = file; path = emerald.gba; sourceTree = "<group>"; };
 		1374B6512326E634006193B8 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../../../../../usr/local/Cellar/sdl2/2.0.10/lib/libSDL2.a; sourceTree = "<group>"; };
 		1374B6532326E8B8006193B8 /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Regular.ttf"; sourceTree = "<group>"; };
@@ -66,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				1374B6532326E8B8006193B8 /* Raleway-Regular.ttf */,
+				131AAB56234A580000D019BD /* zelda.gba */,
 				9306837B2307D82B00B711BB /* bios.gba */,
 				133849EF231287C4009563D3 /* emerald.gba */,
 				9306833D2307BAAC00B711BB /* GBA */,

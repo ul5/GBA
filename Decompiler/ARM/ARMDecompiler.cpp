@@ -211,7 +211,7 @@ std::string Decompiler::decompileARM(word instruction, Base::CPU *cpu, bool prin
 			}
 			else if ((instruction & 0x0FFFFFF0) == 0x012FFF10) {
 				disassembled = std::string("BX ") + reg_names[instruction & 0xF];
-            } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x003F0000 && (instruction & 0x00000FFF) == 0x00000FFF) {
+            } else if((instruction & 0x0F800000) == 0x01000000 && (instruction & 0x003F0000) == 0x000F0000 && (instruction & 0x00000FFF) == 0x00000000) {
                 //printf("MRS");
                 disassembled = "MRS";
                 disassembled = disassembled + conditions[(instruction >> 28) & 0xF];
