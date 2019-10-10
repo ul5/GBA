@@ -9,7 +9,7 @@ all: ../bin/libDebugger.so
 	$(CXX) -shared -O3 $(OBJS) -o ../bin/libDebugger.so $(LIBS)
 	
 %.o: %.cpp
-	$(CXX) -c -O3 -fPIC -std=c++11 $(INCLUDE) -o $*.o $<
+	$(CXX) -c -fPIC -O3 -std=c++11 $(INCLUDE) -o $*.o $<
 
 clean:
 	rm -rf $(OBJS)

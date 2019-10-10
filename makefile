@@ -1,10 +1,12 @@
-all:	bin/gba
+all:	clean bin/gba
 
 bin/gba: bin/libBase.so bin/libDecompiler.so bin/libDebugger.so 
 	@echo "[GBA] Building GBA Emulator"
 	@$(MAKE) -C "GBA"
 	cp GBA/bios.gba bin/
 	cp GBA/emerald.gba bin/
+	cp libs/lib/libSDL2.so bin/
+	cp libs/lib/libSDL2_ttf-2.0.so.0 bin/
 
 bin/libBase.so:
 	@echo "[GBA] Building libBase.so"

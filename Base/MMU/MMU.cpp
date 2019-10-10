@@ -40,8 +40,9 @@ Base::MMU::MMU() {
 		bit_masks[0x8 + i] = cartridge_full.size >= 0x1000000 * i ? (size >= 0x1000000 ? 0x1000000 : size) : 1; 
 	}
 
-	memory[0xE] = cart; // Actually cart_ram
-	
+	memory[0xE] = (byte*) malloc(0x10000); // Actually cart_ram
+	bit_masks[0xE] = 0x00010000;
+
 	bit_masks[0] = 0x00FFFFFF + 1;
 	bit_masks[1] = 0x00000000 + 1;
 	bit_masks[2] = 0x0003FFFF + 1;
@@ -105,7 +106,7 @@ void Base::MMU::check_stuff(word address, word value) {
         
         word start_addr = r32(0x040000D4);
         word cpy_addr = r32(0x040000D8);
-        for(int addr_off = 0; addr_off < r16(0x040000DC); addr_off += bit_32 ? 4 : 2) {
+        for(int addr_off = 0; addr_off < r16(0x040000DC) * (bit_32 ? 4 : 2); addr_off += bit_32 ? 4 : 2) {
             if(bit_32) w32(cpy_addr + addr_off, r32(start_addr + addr_off));
             else w16(cpy_addr + addr_off, r16(start_addr + addr_off));
         }

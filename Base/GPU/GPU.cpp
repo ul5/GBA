@@ -50,6 +50,8 @@ void Base::GPU::render(Base::CPU *cpu) {
             if(e.window.event == SDL_WINDOWEVENT_CLOSE) exit(0);
         } else if(e.type == SDL_KEYDOWN) {
             if(e.key.keysym.sym == SDLK_ESCAPE) exit(0);
+            else if(e.key.keysym.sym == SDLK_r) cpu->pc().data.reg32 = 0;
+            else if(e.key.keysym.sym == SDLK_b) cpu->pc().data.reg32 += 1;
         }
     }
 
