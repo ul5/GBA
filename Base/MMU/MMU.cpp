@@ -92,15 +92,15 @@ void Base::MMU::check_stuff(word address, word value) {
         printf("DMA control 0 set!\n");
     }
     if(address == 0x040000C7 && (value & 0x80)) {
-        printf("DMA control 1 set! : %.04X\n", r16(0x040000C6));
-        printf("\tCopying from: %.08X\n\tCopying to    %.08X\n\tCopy amount:  %.04X\n", r32(0x040000BC), r32(0x040000C0), r16(0x040000C4));
+        //printf("DMA control 1 set! : %.04X\n", r16(0x040000C6));
+        //printf("\tCopying from: %.08X\n\tCopying to    %.08X\n\tCopy amount:  %.04X\n", r32(0x040000BC), r32(0x040000C0), r16(0x040000C4));
     }
     if(address == 0x040000D3 && (value & 0x80)) {
-        printf("DMA control 2 set!\n");
+        //printf("DMA control 2 set!\n");
     }
     if(address == 0x040000DF && (value & 0x80)) {
-        printf("DMA control 3 set!\n");
-        printf("\tCopying from: %.08X\n\tCopying to    %.08X\n\tCopy amount:  %.04X\n", r32(0x040000D4), r32(0x040000D8), r16(0x040000DC));
+        //printf("DMA control 3 set!\n");
+        //printf("\tCopying from: %.08X\n\tCopying to    %.08X\n\tCopy amount:  %.04X\n", r32(0x040000D4), r32(0x040000D8), r16(0x040000DC));
         
         bool bit_32 = value & 0x04;
         

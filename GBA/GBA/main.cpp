@@ -7,9 +7,8 @@ int main(int argc, const char **args) {
     printf("[INFO] Starting GBA Emulator in %s\n", args[0]);
     Debugger::Interpreter *interpreter = new Debugger::Interpreter();
 
-    interpreter->executeNextInstruction(false);
     int counter = 0; // 0x082E062D
-    while(interpreter->pc().data.reg32 != 0x64 && interpreter->cpu->r32(interpreter->pc().data.reg32) != 0 && (interpreter->pc().data.reg32 & 1) == 0) {
+    while(interpreter->pc().data.reg32 != 0x082e6dd4 && interpreter->cpu->r32(interpreter->pc().data.reg32) != 0 && (interpreter->pc().data.reg32 & 1) == 0) {
         interpreter->executeNextInstruction(false);
         if(++counter >= 280896) {
             counter = 0;

@@ -31,9 +31,9 @@ void Base::GPU::update() {
             }
         }
 
-        if(y_dot == mmu->r8(0x04000004)) flags |= 0x4;
+        if(y_dot == mmu->r8(0x04000004) && x_dot == 0) flags |= 0x4;
 
-        if(y_dot == 0x9F && x_dot == 0) printf("Frame %d\n", frame++); 
+        // if(y_dot == 0x9F && x_dot == 0) printf("Frame %d\n", frame++); 
 
         byte *io = mmu->memory[4];
         io[0x202] |= flags;

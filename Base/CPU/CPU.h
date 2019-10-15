@@ -26,6 +26,11 @@ namespace Base {
         inline void update_gpu() { 
 			gpu->update();
             timers->update();
+
+			if(pc().data.reg32 == 0x0000013C) {
+
+				printf("Returned from interrupt to: %.08X\n", reg(LR).data.reg32);
+			}
             
 			bool interrupts_enabled = r8(0x04000208) & 1;
 			bool irq_enabled = !((*set)[CPSR].data.reg32 & FLAG_I);
@@ -40,7 +45,7 @@ namespace Base {
 				(*set)[PC].data.reg32 = 0x18;
 				(*set)[SPSR].data.reg32 = old_cpsr; // Clear T bit
 				(*set)[CPSR].data.reg32 &= 0xFFFFFF40 | MODE_IRQ;
-				(*set)[CPSR].data.reg32 |= FLAG_I;
+				(*set)[CPSR].data.reg32 |= FLAG_I | FLAG_F;
 
 				printf("Interrupt occured: %.04X\n", interrupts);
 

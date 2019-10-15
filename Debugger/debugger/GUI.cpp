@@ -136,6 +136,7 @@ void Debugger::GUI::start() {
                 }
                 else if(e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 3) text = text.substr(0, text.length() - 1);
                 else if(e.key.keysym.sym == SDLK_RETURN) {
+                    mDebugger->executeNextInstruction(false);
                     running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
                     animated = true;
                     //text = "== ";
@@ -146,6 +147,19 @@ void Debugger::GUI::start() {
                 } else if(e.key.keysym.sym == SDLK_l) {
                     disassembled = !disassembled;
                 } else if(e.key.keysym.sym == SDLK_LEFT) ++vram_gui->loffset;
+                else if(e.key.keysym.sym == SDLK_h) {
+                    mDebugger->executeNextInstruction(false);
+                    running_until = (int) strtol(text.substr(3).c_str(), NULL, 16);
+                    int counter = 0;
+                    while(mDebugger->cpu->pc().data.reg32 != running_until) 
+                    {
+                        mDebugger->executeNextInstruction(false);
+                        if(++counter >= 280896) {
+                            counter = 0;
+                            mDebugger->cpu->render();
+                        }
+                    }
+                }
             }
         }
         
